@@ -412,6 +412,13 @@ export const es: Dictionary = {
     rights: "Todos los derechos reservados.",
     madeWith: "Hecho para quien solo necesita que el archivo funcione.",
   },
+  ads: {
+    label: "Publicidad",
+  },
+  stats: {
+    visitors: "visitantes en total",
+    conversions: "conversiones realizadas",
+  },
 
   pages: {
     about: {
@@ -429,7 +436,7 @@ export const es: Dictionary = {
         },
         {
           h: "Lo que eso nos cuesta",
-          p: "Un conversor que se ejecuta en el dispositivo del usuario no puede monetizar tus datos, así que se financia siendo sencillo y fiable. Mantenemos la herramienta gratuita, sin anuncios y sin registro. También dejamos visibles los límites honestos: un PDF escaneado no tiene capa de texto y no se puede convertir sin OCR, y lo decimos en lugar de devolver calladamente un archivo vacío.",
+          p: "Un conversor que se ejecuta en el dispositivo del usuario no puede monetizar tus datos, así que se financia con la publicidad de la página, siendo sencillo y fiable. Mantenemos la herramienta gratuita y sin registro. También dejamos visibles los límites honestos: un PDF escaneado no tiene capa de texto y no se puede convertir sin OCR, y lo decimos en lugar de devolver calladamente un archivo vacío.",
         },
         {
           h: "Para quién es",
@@ -452,11 +459,19 @@ export const es: Dictionary = {
         },
         {
           h: "Cookies y almacenamiento local",
-          p: "Guardamos tu elección de tema (claro u oscuro) y de idioma en el almacenamiento local del navegador. Son datos locales de tu dispositivo, nunca se envían a nosotros y sirven solo para que el sitio se vea como lo dejaste. No usamos cookies publicitarias ni de seguimiento entre sitios.",
+          p: "Guardamos tu elección de tema (claro u oscuro) y de idioma en el almacenamiento local del navegador. Son datos locales de tu dispositivo, nunca se envían a nosotros y sirven solo para que el sitio se vea como lo dejaste.",
+        },
+        {
+          h: "Contadores de visitas y conversiones",
+          p: "Las páginas muestran cuántos visitantes ha tenido el sitio en total y cuántas conversiones se han completado. Son solo cifras agregadas. Para no contar varias veces a la misma persona, un visitante se identifica mediante un hash de la dirección de la solicitud y del tipo de navegador; ese hash se combina con una clave que cambia cada día y el resultado se descarta a los dos días. La dirección en sí no se guarda, no se usan cookies y los contadores no permiten identificar a ninguna persona concreta. Usamos estos totales únicamente para saber si el sitio resulta útil.",
+        },
+        {
+          h: "Publicidad",
+          p: "Las páginas llevan publicidad. La red publicitaria que la sirve puede usar cookies o tecnologías similares para medir cuántas veces se mostró un anuncio y si se hizo clic. Lo hace en su propio nombre y según su propia política, y nunca recibe los documentos que conviertes. Tu archivo se lee y se procesa dentro del navegador, así que la red publicitaria no tiene acceso a él y el sitio no lo sube a ningún sitio.",
         },
         {
           h: "Servicios de terceros",
-          p: "Los enlaces salientes a otras webs están señalizados. Una vez sigues uno, se aplica la política de privacidad de ese sitio. No incrustamos rastreadores, widgets de chat ni redes publicitarias de terceros.",
+          p: "Los enlaces salientes a otras webs están señalizados. Una vez sigues uno, se aplica la política de privacidad de ese sitio. No incrustamos widgets de chat ni rastreadores de analítica de terceros.",
         },
         {
           h: "Menores",

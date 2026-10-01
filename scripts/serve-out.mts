@@ -1,12 +1,18 @@
 /** Minimal static server for the exported site in out/, used to test the real artifact. */
 import { createReadStream, existsSync, statSync } from "node:fs";
-import { createServer } from "node:http";
+import { createServer, request as httpRequest } from "node:http";
 import { extname, join, normalize } from "node:path";
 
 import { headersFor, loadHeaders } from "./headers.mts";
 
 const ROOT = join(process.cwd(), "out");
 const PORT = Number(process.env.PORT ?? 5050);
+
+// The counter service is proxied on production by nginx. Locally there is no
+// nginx, so the same routes are forwarded to a service started by the test
+// harness. Without this the counter would 404 and the browser tests would fail
+// on requests the site is expected to make.
+const STATS_UPSTREAM = process.env.STATS_UPSTREAM ?? "";
 
 const TYPES: Record<string, string> = {
   ".html": "text/html; charset=utf-8",
@@ -32,6 +38,37 @@ const rules = loadHeaders();
 
 createServer((request, response) => {
   const url = new URL(request.url ?? "/", `http://localhost:${PORT}`);
+
+  if (url.pathname.startsWith("/api/stats")) {
+    if (!STATS_UPSTREAM) {
+      // No counter service in this environment. Answer the shape the site
+      // expects so the page settles into a defined state instead of erroring,
+      // while making it obvious the numbers are not real.
+      response.writeHead(200, {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+      });
+      response.end(JSON.stringify({ visitors: 0, conversions: 0 }));
+      return;
+    }
+    const proxied = httpRequest(
+      `${STATS_UPSTREAM}${url.pathname}${url.search}`,
+      { method: request.method, headers: { ...request.headers, host: STATS_UPSTREAM } },
+      (upstreamResponse) => {
+        response.writeHead(upstreamResponse.statusCode ?? 502, {
+          "content-type": upstreamResponse.headers["content-type"] ?? "application/json",
+          "cache-control": "no-store",
+        });
+        upstreamResponse.pipe(response);
+      },
+    );
+    proxied.on("error", () => {
+      response.writeHead(502, { "content-type": "application/json" });
+      response.end(JSON.stringify({ error: "stats upstream unavailable" }));
+    });
+    request.pipe(proxied);
+    return;
+  }
   // normalize() returns Windows separators here, so the request path is put back
   // into URL form before it is matched against the _headers rules and joined
   // onto the export root.

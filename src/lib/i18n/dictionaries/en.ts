@@ -412,6 +412,13 @@ export const en: Dictionary = {
     rights: "All rights reserved.",
     madeWith: "Built for people who just need the file to work.",
   },
+  ads: {
+    label: "Advertisement",
+  },
+  stats: {
+    visitors: "visitors so far",
+    conversions: "conversions done",
+  },
 
   pages: {
     about: {
@@ -429,7 +436,7 @@ export const en: Dictionary = {
         },
         {
           h: "What that costs us",
-          p: "A self-hosted converter cannot monetise your data, so it is funded by being simple and dependable. We keep the tool free, ad-free and without sign-up. We also keep the honest limits visible: a scanned PDF has no text layer and cannot be converted without OCR, and we say so instead of quietly returning an empty file.",
+          p: "A self-hosted converter cannot monetise your data, so it is funded by the advertising on the page and by being simple and dependable. We keep the tool free and without sign-up. We also keep the honest limits visible: a scanned PDF has no text layer and cannot be converted without OCR, and we say so instead of quietly returning an empty file.",
         },
         {
           h: "Who it is for",
@@ -452,11 +459,19 @@ export const en: Dictionary = {
         },
         {
           h: "Cookies and local storage",
-          p: "We store your theme choice (light or dark) and your language choice in your browser's local storage. This is local to your device, is never sent to us, and is used only so the site looks the way you left it. We do not use advertising cookies or cross-site tracking cookies.",
+          p: "We store your theme choice (light or dark) and your language choice in your browser's local storage. This is local to your device, is never sent to us, and is used only so the site looks the way you left it.",
+        },
+        {
+          h: "Visit and conversion counters",
+          p: "The pages show how many visitors the site has had in total and how many conversions have been completed. The numbers are aggregate only. To avoid counting the same person repeatedly, a visitor is identified by a hash of the request address and browser type, the hash is combined with a key that changes every day, and the result is discarded after two days. Your address itself is never stored, no cookie is used, and the counters cannot be traced back to you. We use these totals to understand whether the site is useful, and for nothing else.",
+        },
+        {
+          h: "Advertising",
+          p: "The pages carry advertising. The advertising network that serves it may place cookies or use similar technologies to measure how often an advert is shown and whether it was clicked. It does this on its own behalf and under its own policy, and it never receives the documents you convert. Your file is read and processed inside your browser, so the advert network has no access to it, and the site itself never uploads it anywhere.",
         },
         {
           h: "Third-party services",
-          p: "Outgoing links to other websites are marked as such. Once you follow one, that site's own privacy policy applies. We do not embed third-party trackers, chat widgets or advertising networks.",
+          p: "Outgoing links to other websites are marked as such. Once you follow one, that site's own privacy policy applies. We do not embed chat widgets or third-party analytics trackers.",
         },
         {
           h: "Children",

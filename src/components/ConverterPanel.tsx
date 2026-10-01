@@ -17,6 +17,7 @@ import {
   SwapIcon,
   UploadIcon,
 } from "./icons";
+import { reportConversion } from "./StatsCounter";
 
 type Status = "idle" | "working" | "done" | "error";
 
@@ -144,6 +145,9 @@ export function ConverterPanel({
       setResult(output);
       setProgress(100);
       setStatus("done");
+      // Counted here rather than on button press: this point is only reached
+      // once a real file came out of the converter.
+      reportConversion(meta.slug);
     } catch (thrown) {
       setError(errorMessage(thrown, copy, meta.accepts.join(", ").toUpperCase()));
       setStatus("error");

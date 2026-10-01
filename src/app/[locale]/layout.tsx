@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
 import { ThemeScript } from "@/components/ThemeScript";
+import { YandexAdsLoader } from "@/components/YandexAdsLoader";
 import { getDictionary, isLocale, locales, type Locale } from "@/lib/i18n";
 import { buildMetadata } from "@/lib/seo";
 import { site } from "@/lib/site";
@@ -72,9 +73,10 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      <head>
-        <ThemeScript />
-      </head>
+<head>
+          <ThemeScript />
+          <YandexAdsLoader />
+        </head>
       <body className={`${inter.variable} app-bg antialiased`}>{children}</body>
     </html>
   );

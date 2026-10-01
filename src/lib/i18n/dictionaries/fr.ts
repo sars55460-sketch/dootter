@@ -412,6 +412,13 @@ export const fr: Dictionary = {
     rights: "Tous droits réservés.",
     madeWith: "Fait pour ceux qui veulent simplement que le fichier fonctionne.",
   },
+  ads: {
+    label: "Publicite",
+  },
+  stats: {
+    visitors: "visiteurs au total",
+    conversions: "conversions effectuees",
+  },
 
   pages: {
     about: {
@@ -429,7 +436,7 @@ export const fr: Dictionary = {
         },
         {
           h: "Ce que cela nous coûte",
-          p: "Un convertisseur qui s'exécute sur l'appareil de l'utilisateur ne peut pas monétiser vos données ; il se finance donc par la simplicité et la fiabilité. L'outil reste gratuit, sans publicité et sans inscription. Nous gardons aussi visibles les limites honnêtes : un PDF numérisé n'a pas de couche de texte et ne peut pas être converti sans reconnaissance optique, et nous le disons au lieu de renvoyer discrètement un fichier vide.",
+          p: "Un convertisseur qui s'exécute sur l'appareil de l'utilisateur ne peut pas monétiser vos données ; il se finance donc par la publicité affichée sur la page, par la simplicité et la fiabilité. L'outil reste gratuit et sans inscription. Nous gardons aussi visibles les limites honnêtes : un PDF numérisé n'a pas de couche de texte et ne peut pas être converti sans reconnaissance optique, et nous le disons au lieu de renvoyer discrètement un fichier vide.",
         },
         {
           h: "À qui cela s'adresse",
@@ -452,11 +459,19 @@ export const fr: Dictionary = {
         },
         {
           h: "Cookies et stockage local",
-          p: "Nous enregistrons votre choix de thème (clair ou sombre) et de langue dans le stockage local de votre navigateur. Ces données restent sur votre appareil, ne nous sont jamais envoyées et servent uniquement à ce que le site ressemble à ce que vous avez laissé. Nous n'utilisons ni cookies publicitaires ni cookies de pistage entre sites.",
+          p: "Nous enregistrons votre choix de thème (clair ou sombre) et de langue dans le stockage local de votre navigateur. Ces données restent sur votre appareil, ne nous sont jamais envoyées et servent uniquement à ce que le site ressemble à ce que vous avez laissé.",
+        },
+        {
+          h: "Compteurs de visites et de conversions",
+          p: "Les pages indiquent combien de visiteurs le site a comptes au total et combien de conversions ont ete realisees. Il s'agit uniquement de chiffres agreges. Pour ne pas compter plusieurs fois la meme personne, un visiteur est identifie par une empreinte de l'adresse de la requete et du type de navigateur; cette empreinte est combinee a une cle qui change chaque jour, et le resultat est efface au bout de deux jours. L'adresse elle-meme n'est pas conservee, aucun cookie n'est utilise et les compteurs ne permettent pas d'identifier une personne en particulier. Nous utilisons ces totaux uniquement pour savoir si le site est utile.",
+        },
+        {
+          h: "Publicité",
+          p: "Les pages comportent de la publicité. Le réseau publicitaire qui la diffuse peut déposer des cookies ou utiliser des technologies similaires pour mesurer combien de fois une annonce a été affichée et si elle a été cliquée. Il le fait en son propre nom et selon sa propre politique, et ne reçoit jamais les documents que vous convertissez. Votre fichier est lu et traité dans votre navigateur, si bien que le réseau publicitaire n'y a pas accès et que le site ne l'envoie nulle part.",
         },
         {
           h: "Services tiers",
-          p: "Les liens sortants vers d'autres sites sont signalés comme tels. Dès que vous en suivez un, la politique de confidentialité de ce site s'applique. Nous n'intégrons aucun traqueur, widget de chat ou réseau publicitaire tiers.",
+          p: "Les liens sortants vers d'autres sites sont signalés comme tels. Dès que vous en suivez un, la politique de confidentialité de ce site s'applique. Nous n'intégrons aucun widget de chat ni traqueur d'analyse tiers.",
         },
         {
           h: "Enfants",

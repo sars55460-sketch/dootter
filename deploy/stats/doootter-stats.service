@@ -1,0 +1,39 @@
+[Unit]
+# Visitor and conversion counter for converter-dotter.ru.
+#
+# The site itself is a static export served by nginx; this unit is the only
+# writable piece in the stack. It binds to 127.0.0.1 and is reachable exclusively
+# through the /api/stats location in the nginx site config, so there is no
+# public listener of its own.
+Description=Dootter visitor and conversion counter
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/doootter-stats/doootter-stats.py --host 127.0.0.1 --port 8099 --state /var/lib/doootter/stats.json
+Restart=always
+RestartSec=3
+
+# Hardening. The service only ever reads its own state file, so it gets no
+# network egress beyond the loopback listener and no write access outside its
+# state directory.
+User=www-data
+Group=www-data
+StateDirectory=doootter
+WorkingDirectory=/var/lib/doootter
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6
+RestrictNamespaces=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+ReadWritePaths=/var/lib/doootter
+
+[Install]
+WantedBy=multi-user.target

@@ -117,6 +117,13 @@ export type Dictionary = {
     rights: string;
     madeWith: string;
   };
+  ads: {
+    label: string;
+  };
+  stats: {
+    visitors: string;
+    conversions: string;
+  };
   pages: {
     about: LegalPage;
     privacy: LegalPage;

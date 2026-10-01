@@ -243,3 +243,23 @@ export function ArrowIcon({ className = "size-4" }: IconProps) {
     </svg>
   );
 }
+
+export function PeopleIcon({ className = "size-5" }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <circle cx="9.5" cy="8.4" r="3.1" stroke="currentColor" strokeWidth="1.7" />
+      <path
+        d="M3.8 19.4c.5-3 2.8-4.8 5.7-4.8s5.2 1.8 5.7 4.8"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+      />
+      <path
+        d="M16.1 6.1a2.6 2.6 0 0 1 0 5M17.6 14.9c1.6.6 2.6 1.9 2.9 4"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}

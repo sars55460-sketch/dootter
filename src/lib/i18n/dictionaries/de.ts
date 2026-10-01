@@ -412,6 +412,13 @@ export const de: Dictionary = {
     rights: "Alle Rechte vorbehalten.",
     madeWith: "Gemacht für alle, denen die Datei einfach funktionieren soll.",
   },
+  ads: {
+    label: "Anzeige",
+  },
+  stats: {
+    visitors: "Besucher insgesamt",
+    conversions: "Konvertierungen",
+  },
 
   pages: {
     about: {
@@ -429,7 +436,7 @@ export const de: Dictionary = {
         },
         {
           h: "Was uns das kostet",
-          p: "Ein Konverter, der auf dem Gerät des Nutzers läuft, kann Ihre Daten nicht monetarisieren, also finanziert er sich durch Einfachheit und Verlässlichkeit. Das Werkzeug bleibt gratis, werbefrei und ohne Anmeldung. Außerdem halten wir die ehrlichen Grenzen sichtbar: Ein gescanntes PDF hat keine Textebene und lässt sich ohne Texterkennung nicht konvertieren — das sagen wir, statt still eine leere Datei zurückzugeben.",
+          p: "Ein Konverter, der auf dem Gerät des Nutzers läuft, kann Ihre Daten nicht monetarisieren, also finanziert er sich durch die Werbung auf der Seite, durch Einfachheit und Verlässlichkeit. Das Werkzeug bleibt gratis und ohne Anmeldung. Außerdem halten wir die ehrlichen Grenzen sichtbar: Ein gescanntes PDF hat keine Textebene und lässt sich ohne Texterkennung nicht konvertieren — das sagen wir, statt still eine leere Datei zurückzugeben.",
         },
         {
           h: "Für wen das gedacht ist",
@@ -452,11 +459,19 @@ export const de: Dictionary = {
         },
         {
           h: "Cookies und lokaler Speicher",
-          p: "Wir speichern Ihre Designwahl (hell oder dunkel) und Ihre Sprachwahl im lokalen Speicher Ihres Browsers. Diese Daten bleiben auf Ihrem Gerät, werden nie an uns gesendet und dienen nur dazu, dass die Seite so aussieht, wie Sie sie verlassen haben. Werbe- oder Tracking-Cookies verwenden wir nicht.",
+          p: "Wir speichern Ihre Designwahl (hell oder dunkel) und Ihre Sprachwahl im lokalen Speicher Ihres Browsers. Diese Daten bleiben auf Ihrem Gerät, werden nie an uns gesendet und dienen nur dazu, dass die Seite so aussieht, wie Sie sie verlassen haben.",
+        },
+        {
+          h: "Besucher- und Konversionszähler",
+          p: "Auf den Seiten steht, wie viele Besucher die Website insgesamt hatte und wie viele Konvertierungen abgeschlossen wurden. Das sind ausschließlich zusammengefasste Zahlen. Um dieselbe Person nicht mehrfach zu zählen, wird ein Besucher über einen Hash aus Anfrageadresse und Browsertyp bestimmt; der Hash wird mit einem Schlüssel kombiniert, der täglich wechselt, und das Ergebnis wird nach zwei Tagen verworfen. Die Adresse selbst wird nicht gespeichert, es werden keine Cookies verwendet, und über die Zähler lässt sich keine einzelne Person ermitteln. Wir nutzen diese Summen ausschließlich, um zu erkennen, ob die Website nützlich ist.",
+        },
+        {
+          h: "Werbung",
+          p: "Die Seiten enthalten Werbung. Das Anzeigennetzwerk, das sie ausliefert, kann Cookies oder ähnliche Technologien verwenden, um zu messen, wie oft eine Anzeige geschaltet wurde und ob sie angeklickt wurde. Das geschieht in eigenem Namen und nach seiner eigenen Datenschutzerklärung, und die von Ihnen konvertierten Dokumente erhält es dabei nicht. Ihre Datei wird im Browser gelesen und verarbeitet, sodass das Anzeigennetzwerk keinen Zugriff darauf hat und die Seite sie nirgendwohin hochlädt.",
         },
         {
           h: "Drittanbieter-Dienste",
-          p: "Ausgehende Links zu anderen Websites sind als solche gekennzeichnet. Sobald Sie einem folgen, gilt die Datenschutzerklärung dieser Seite. Wir binden keine Tracker, Chat-Widgets oder Werbenetzwerke Dritter ein.",
+          p: "Ausgehende Links zu anderen Websites sind als solche gekennzeichnet. Sobald Sie einem folgen, gilt die Datenschutzerklärung dieser Seite. Wir binden keine Chat-Widgets und keine Analysetracker Dritter ein.",
         },
         {
           h: "Kinder",

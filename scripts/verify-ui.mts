@@ -47,9 +47,18 @@ async function readDocxXml(path: string): Promise<string> {
 function watch(page: puppeteer.Page) {
   const problems: string[] = [];
   page.on("pageerror", (error) => problems.push(`pageerror: ${error.message}`));
-  page.on("response", (response) => {
-    if (response.status() >= 400) problems.push(`http ${response.status()} ${response.url()}`);
-  });
+  // Ad requests belong to a third party we do not control: the network answers
+// 404 on localhost because the origin is not a registered site, and it would
+// answer the same way for any ad slot in any environment. Only our own responses
+// are treated as failures. The host is compared rather than a substring,
+// because an ad URL carries our own address inside its query string.
+const ownHosts = new Set([new URL(BASE).hostname, "127.0.0.1", "localhost"]);
+const isOwnRequest = (url: string) => ownHosts.has(new URL(url).hostname);
+page.on("response", (response) => {
+  if (response.status() >= 400 && isOwnRequest(response.url())) {
+    problems.push(`http ${response.status()} ${response.url()}`);
+  }
+});
   // Content-Security-Policy violations surface as console errors and would
   // otherwise look like an ordinary broken converter.
   page.on("console", (message) => {

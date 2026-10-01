@@ -7,7 +7,9 @@ import { Faq } from "@/components/Faq";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/JsonLd";
+import { StatsCounter } from "@/components/StatsCounter";
 import { CheckIcon, ChevronIcon, ShieldIcon } from "@/components/icons";
+import { YandexAds } from "@/components/YandexAds";
 import { converters, isConverterSlug } from "@/lib/converters/registry";
 import { getDictionary, isLocale, locales, t, type ConverterId } from "@/lib/i18n";
 import { appJsonLd, breadcrumbJsonLd, buildMetadata, faqJsonLd } from "@/lib/seo";
@@ -179,6 +181,14 @@ export default async function ConverterPage({
           </div>
         </section>
       </main>
+
+      <div className="mt-20">
+        <YandexAds label={dict.ads.label} />
+      </div>
+
+      <div className="mt-16 border-t border-line">
+        <StatsCounter locale={locale} labels={dict.stats} />
+      </div>
 
       <Footer locale={locale} dict={dict} />
 

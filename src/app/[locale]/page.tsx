@@ -6,6 +6,8 @@ import { Faq } from "@/components/Faq";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/JsonLd";
+import { StatsCounter } from "@/components/StatsCounter";
+import { YandexAds } from "@/components/YandexAds";
 import { BoltIcon, CheckIcon, InfinityIcon, ShieldIcon, SparkIcon } from "@/components/icons";
 import { converters } from "@/lib/converters/registry";
 import { getDictionary, isLocale } from "@/lib/i18n";
@@ -148,6 +150,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
         </section>
       </main>
+
+      <div className="mt-20">
+        <YandexAds label={dict.ads.label} />
+      </div>
+
+      <div className="mt-16 border-t border-line">
+        <StatsCounter locale={locale} labels={dict.stats} />
+      </div>
 
       <Footer locale={locale} dict={dict} />
 

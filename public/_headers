@@ -15,9 +15,14 @@
 #
 # 'unsafe-inline' is required for scripts and styles: a static export ships its
 # hydration payload as inline <script>/<style> blocks, and the Word renderer
-# writes inline styles onto the pages it lays out. Everything else is pinned to
-# 'self' and the site loads no third-party code at all. blob: is needed for the
+# writes inline styles onto the pages it lays out. blob: is needed for the
 # pdf.js worker, the object URLs behind the download buttons, and html2canvas.
+#
+# The Yandex.RTB advertising network is the one deliberate third party. It needs
+# its origin in script-src for the loader, in img-src for creatives, in
+# connect-src for the ad request itself, and in frame-src because most formats
+# render inside an iframe. Nothing about the converter is relaxed: the file is
+# still read in the browser and still never sent anywhere.
 /*
   Cache-Control: public, max-age=0, must-revalidate
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
@@ -28,7 +33,7 @@
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-origin
   X-DNS-Prefetch-Control: off
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://yandex.ru https://*.yandex.ru https://yastatic.net https://*.yastatic.net; style-src 'self' 'unsafe-inline' https://yastatic.net https://*.yastatic.net; img-src 'self' data: blob: https://*.yandex.ru https://yastatic.net https://*.yastatic.net https://mc.yandex.com https://*.mc.yandex.com; font-src 'self' https://yastatic.net https://*.yastatic.net; connect-src 'self' blob: https://yandex.ru https://*.yandex.ru https://yastatic.net https://*.yastatic.net https://mc.yandex.com https://*.mc.yandex.com wss://mc.yandex.com wss://*.mc.yandex.com; worker-src 'self' blob:; child-src 'self' blob:; frame-src https://yandex.ru https://*.yandex.ru https://yastatic.net https://*.yastatic.net; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
 
 # Static JS and CSS. Immutable is safe because Next.js fingerprints every file
 # under _next/static, so a changed file always gets a new name.

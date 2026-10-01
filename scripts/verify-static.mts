@@ -168,7 +168,22 @@ if (onStaticExport) {
   log(csp.includes("frame-ancestors 'none'"), "CSP forbids framing");
   log(csp.includes("object-src 'none'"), "CSP forbids plugins");
   log(!/unsafe-eval/.test(csp), "CSP does not allow eval");
-  log(!/https?:\/\//.test(csp.replace(/upgrade-insecure-requests/, "")), "CSP allows no third-party origin");
+  // The only third-party origins allowed are the ad network's, and each one
+  // has to be named explicitly: a wildcard would quietly widen the policy.
+  const thirdParties = [...new Set([...csp.matchAll(/https?:\/\/[^;]+/g)].map((m) => m[0].trim()))];
+  const allowedHosts = ["yandex.ru", "yastatic.net", "mc.yandex.com"];
+  const unexpected = thirdParties.filter(
+    (origin) =>
+      !allowedHosts.some((host) =>
+        // The ad network also opens a WebSocket, which needs its own scheme.
+        ["https", "wss"].some((scheme) => origin === `${scheme}://${host}` || origin === `${scheme}://*.${host}`),
+      ),
+  );
+  log(
+    unexpected.length === 0,
+    "CSP allows only the advertising origins",
+    unexpected.slice(0, 4).join(", ") || thirdParties.join(" "),
+  );
   log(head("x-content-type-options") === "nosniff", "nosniff present", head("x-content-type-options"));
   log(head("referrer-policy").length > 0, "referrer policy present", head("referrer-policy"));
   log(head("permissions-policy").length > 0, "permissions policy present", head("permissions-policy"));
@@ -189,6 +204,20 @@ log(
   home.headers.get("cache-control") ?? "",
 );
 }
+
+console.log("\n== visit and conversion counter");
+// The counter ships client-rendered, so the built HTML must at least carry the
+// labels and the test hook. The numbers themselves only exist once the browser
+// has spoken to the counter service, which the local static server does not
+// provide, so they are checked by scripts/verify-stats.mts instead.
+const counterPages = pages.filter((page) => /\/[a-z]{2}\/(\w[\w-]*\/)?$/.test(page.path) && !/\/(about|privacy|terms|contact)\/$/.test(page.path));
+const missingCounter = counterPages
+  .filter((page) => !page.html.includes("data-testid=\"stats-counter\""))
+  .map((page) => page.path);
+log(
+  missingCounter.length === 0,
+  "the counter is present on the home and converter pages",
+  missingCounter.slice(0, 4).join(", ") || `${counterPages.length} pages`);
 
 console.log("\n== internal links");
 const linkTargets = new Set<string>();
