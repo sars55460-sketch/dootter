@@ -34,6 +34,20 @@ function sleep(ms: number) {
 
 /** Start the service and wait until it answers, so tests never race the port. */
 async function startService(limit = 40): Promise<void> {
+  // Refuse to start against a port something else already holds. Without this
+  // check the readiness probe below would be answered by that other process,
+  // the test would silently measure someone else's counters, and every
+  // assertion would fail for a reason that has nothing to do with the service.
+  try {
+    await fetch(`${BASE}/api/stats`, { signal: AbortSignal.timeout(1000) });
+    throw new Error(
+      `port ${PORT} is already in use - something else is answering /api/stats there. ` +
+        `Free the port or run with STATS_PORT set to another one.`,
+    );
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("already in use")) throw error;
+  }
+
   child = spawn(
     "python",
     [SERVICE, "--port", String(PORT), "--state", statePath, "--limit", String(limit)],

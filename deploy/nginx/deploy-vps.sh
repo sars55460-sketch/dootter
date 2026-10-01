@@ -88,7 +88,17 @@ fi
 mkdir -p "$SITE_DIR"
 if [ -n "$ZIP" ]; then
     log "extracting $(basename "$ZIP") into $SITE_DIR"
-    unzip -q -o "$ZIP" -d "$SITE_DIR"
+    unzip -q -o "$ZIP" -d "$SITE_DIR" || {
+        # unzip exits non-zero for warnings, including the harmless "appears to
+        # use backslashes as path separators" that every archive zipped on
+        # Windows produces. Letting that abort the script under `set -e` would
+        # skip the chmod below and leave the site unreadable to nginx: a
+        # directory without the execute bit cannot be traversed, so every asset
+        # 403s and the page renders unstyled. Only a real failure is fatal, and
+        # it is caught here by the missing index.html check.
+        log "unzip reported warnings, continuing"
+    }
+    [ -f "$SITE_DIR/index.html" ] || die "the archive did not unpack: $SITE_DIR/index.html is missing"
 else
     log "copying site files from $SRC into $SITE_DIR"
     cp -a "$SRC/." "$SITE_DIR/"

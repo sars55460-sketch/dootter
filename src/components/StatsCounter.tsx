@@ -45,12 +45,40 @@ function formatNumber(value: number, locale: Locale) {
   }
 }
 
+/**
+ * Picks the noun form that agrees with the number.
+ *
+ * A fixed label would be wrong in Russian for every value except one: "1
+ * посетитель" but "2 посетителя" and "5 посетителей". Intl.PluralRules already
+ * encodes that rule, so the locale decides which of the forms to use and the
+ * fallback keeps the flat label for locales that do not need several forms.
+ */
+function pluralLabel(
+  value: number,
+  locale: Locale,
+  forms: Record<string, string> | undefined,
+  fallback: string,
+) {
+  if (!forms) return fallback;
+  try {
+    const category = new Intl.PluralRules(locale).select(value) as "one" | "few" | "many" | "other";
+    return forms[category] ?? forms.other ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 export function StatsCounter({
   locale,
   labels,
 }: {
   locale: Locale;
-  labels: { visitors: string; conversions: string };
+  labels: {
+    visitors: string;
+    conversions: string;
+    visitorsForms?: Record<string, string>;
+    conversionsForms?: Record<string, string>;
+  };
 }) {
   const [totals, setTotals] = useState<Totals | null>(null);
 
@@ -94,23 +122,23 @@ export function StatsCounter({
       className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-8 gap-y-3 px-4 py-5 text-sm sm:px-6"
       data-testid="stats-counter"
     >
-      <span className="inline-flex items-center gap-2 text-fg-muted">
-        <PeopleIcon className="size-5 text-brand" />
-        <strong className="font-bold tabular-nums text-fg">
-          {formatNumber(totals.visitors, locale)}
-        </strong>
-        <span>{labels.visitors}</span>
-      </span>
+<span className="inline-flex items-center gap-2 text-fg-muted">
+          <PeopleIcon className="size-5 text-brand" />
+          <strong className="font-bold tabular-nums text-fg">
+            {formatNumber(totals.visitors, locale)}
+          </strong>
+          <span>{pluralLabel(totals.visitors, locale, labels.visitorsForms, labels.visitors)}</span>
+        </span>
 
-      <span aria-hidden="true" className="hidden h-4 w-px bg-line sm:block" />
+        <span aria-hidden="true" className="hidden h-4 w-px bg-line sm:block" />
 
-      <span className="inline-flex items-center gap-2 text-fg-muted">
-        <BoltIcon className="size-5 text-brand" />
-        <strong className="font-bold tabular-nums text-fg">
-          {formatNumber(totals.conversions, locale)}
-        </strong>
-        <span>{labels.conversions}</span>
-      </span>
+        <span className="inline-flex items-center gap-2 text-fg-muted">
+          <BoltIcon className="size-5 text-brand" />
+          <strong className="font-bold tabular-nums text-fg">
+            {formatNumber(totals.conversions, locale)}
+          </strong>
+          <span>{pluralLabel(totals.conversions, locale, labels.conversionsForms, labels.conversions)}</span>
+        </span>
     </div>
   );
 }

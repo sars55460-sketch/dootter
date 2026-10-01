@@ -123,6 +123,12 @@ export type Dictionary = {
   stats: {
     visitors: string;
     conversions: string;
+    // Russian needs three plural forms for each noun ("1 посетитель",
+    // "2 посетителя", "5 посетителей"), so the label cannot be a fixed string.
+    // The keys are Intl.PluralRules categories; every locale has to list them
+    // all, and a locale that only needs "other" may repeat it.
+    visitorsForms?: Record<"one" | "few" | "many" | "other", string>;
+    conversionsForms?: Record<"one" | "few" | "many" | "other", string>;
   };
   pages: {
     about: LegalPage;

@@ -418,6 +418,18 @@ export const ru: Dictionary = {
   stats: {
     visitors: "посетителей всего",
     conversions: "конвертаций выполнено",
+    visitorsForms: {
+      one: "посетитель всего",
+      few: "посетителя всего",
+      many: "посетителей всего",
+      other: "посетителя всего",
+    },
+    conversionsForms: {
+      one: "конверсия выполнена",
+      few: "конверсии выполнено",
+      many: "конвертаций выполнено",
+      other: "конверсии выполнено",
+    },
   },
 
   pages: {

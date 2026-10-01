@@ -1,6 +1,11 @@
 const BLOCK_ID = "R-A-20151624-1";
 
-const RENDER = `window.yaContextCb.push(function(){Ya.Context.AdvManager.render({blockId:'${BLOCK_ID}',renderTo:'${BLOCK_ID}'})});`;
+// Yandex's own documentation renders into a container whose id is the block id
+// prefixed with `yandex_rtb_`. renderTo is an element lookup, so pointing it at
+// a bare block id silently finds nothing and the slot stays empty.
+const CONTAINER_ID = `yandex_rtb_${BLOCK_ID}`;
+
+const RENDER = `window.yaContextCb.push(function(){Ya.Context.AdvManager.render({blockId:'${BLOCK_ID}',renderTo:'${CONTAINER_ID}'})});`;
 
 /**
  * Renders a single Yandex.RTB ad slot.
@@ -25,7 +30,7 @@ export function YandexAds({ label }: { label: string }) {
       className="mx-auto w-full max-w-[970px] px-4 sm:px-6"
     >
       <div className="overflow-hidden">
-        <div id={BLOCK_ID} className="min-h-[90px] w-full" />
+        <div id={CONTAINER_ID} className="min-h-[90px] w-full" />
       </div>
       <script dangerouslySetInnerHTML={{ __html: RENDER }} />
     </aside>
