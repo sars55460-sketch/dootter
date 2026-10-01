@@ -91,6 +91,7 @@ class State:
         # restart clears it, which is the truth: the service genuinely knows
         # nothing about who is on the site until they ping again.
         self.live: dict[str, float] = {}
+        self.live_window = LIVE_WINDOW_SECONDS
         self._load()
 
     # -- persistence ------------------------------------------------------
@@ -237,7 +238,7 @@ class State:
         process then holds no wake-ups for data that is only worth reading when
         someone asks. A site nobody visits prunes nothing, which is correct.
         """
-        cutoff = now - LIVE_WINDOW_SECONDS
+        cutoff = now - self.live_window
         stale = [key for key, seen in self.live.items() if seen < cutoff]
         for key in stale:
             del self.live[key]
@@ -466,8 +467,19 @@ class ThreadedHTTPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     allow_reuse_address = True
 
 
-def make_server(host: str, port: int, state_path: str, origin: str, limit: int) -> ThreadedHTTPServer:
+def make_server(
+    host: str,
+    port: int,
+    state_path: str,
+    origin: str,
+    limit: int,
+    live_window: int = LIVE_WINDOW_SECONDS,
+) -> ThreadedHTTPServer:
     state = State(state_path)
+    # Set on the instance rather than the module global so tests can run a
+    # one-second window and observe real expiry through HTTP, instead of only
+    # proving that a restart clears the set.
+    state.live_window = live_window
     handler = type(
         "BoundStatsHandler",
         (StatsHandler,),
@@ -553,13 +565,19 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--state", default=DEFAULT_STATE)
     parser.add_argument("--origin", default=DEFAULT_ALLOWED_ORIGIN)
     parser.add_argument("--limit", type=int, default=REQUESTS_PER_MINUTE)
+    parser.add_argument(
+        "--live-window",
+        type=int,
+        default=LIVE_WINDOW_SECONDS,
+        help="seconds a browser stays present after its last ping",
+    )
     parser.add_argument("--seed-from-log", metavar="PATH")
     args = parser.parse_args(argv)
 
     if args.seed_from_log:
         return seed_from_log(args.seed_from_log, args.state)
 
-    httpd = make_server(args.host, args.port, args.state, args.origin, args.limit)
+    httpd = make_server(args.host, args.port, args.state, args.origin, args.limit, args.live_window)
 
     def shutdown(_signum, _frame):
         threading.Thread(target=httpd.shutdown, daemon=True).start()

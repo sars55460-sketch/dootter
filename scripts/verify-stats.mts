@@ -33,7 +33,7 @@ function sleep(ms: number) {
 }
 
 /** Start the service and wait until it answers, so tests never race the port. */
-async function startService(limit = 40): Promise<void> {
+async function startService(limit = 40, liveWindow?: number): Promise<void> {
   // Refuse to start against a port something else already holds. Without this
   // check the readiness probe below would be answered by that other process,
   // the test would silently measure someone else's counters, and every
@@ -50,7 +50,16 @@ async function startService(limit = 40): Promise<void> {
 
   child = spawn(
     "python",
-    [SERVICE, "--port", String(PORT), "--state", statePath, "--limit", String(limit)],
+    [
+      SERVICE,
+      "--port",
+      String(PORT),
+      "--state",
+      statePath,
+      "--limit",
+      String(limit),
+      ...(liveWindow === undefined ? [] : ["--live-window", String(liveWindow)]),
+    ],
     { stdio: "ignore" },
   );
   for (let attempt = 0; attempt < 60; attempt += 1) {
@@ -287,6 +296,30 @@ try {
 } finally {
   await stopService();
   rmSync(stateDir, { recursive: true, force: true });
+}
+
+console.log("\n== presence expiry");
+{
+  // A separate instance with a one second window, so the five minute production
+  // value does not have to be waited out. Without this, expiry is only covered
+  // indirectly, through a restart emptying the set - which would also pass if
+  // the window were ignored and presence were kept forever.
+  await startService(40, 1);
+  try {
+    await post("/api/stats/ping", {}, { "User-Agent": "expiring-browser" });
+    const fresh = await totals();
+    log(fresh.live === 1, "a browser is present right after its ping", `live=${fresh.live}`);
+
+    await sleep(2500);
+    const gone = await totals();
+    log(gone.live === 0, "presence expires once the window passes", `live=${gone.live}`);
+
+    await post("/api/stats/ping", {}, { "User-Agent": "expiring-browser" });
+    log((await totals()).live === 1, "an expired browser is counted again on its next ping");
+  } finally {
+    await stopService();
+    await startService(40);
+  }
 }
 
 console.log("\n== log seeding");
