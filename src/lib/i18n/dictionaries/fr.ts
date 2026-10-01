@@ -413,7 +413,7 @@ export const fr: Dictionary = {
     madeWith: "Fait pour ceux qui veulent simplement que le fichier fonctionne.",
   },
   ads: {
-    label: "Publicite",
+    label: "Publicité",
   },
   stats: {
     visitors: "visiteurs au total",
@@ -470,7 +470,7 @@ export const fr: Dictionary = {
         },
         {
           h: "Compteurs de visites et de conversions",
-          p: "Les pages indiquent combien de visiteurs le site a comptes au total, combien de conversions ont ete realisees et combien de personnes sont sur le site a cet instant. Il s'agit uniquement de chiffres agreges. Pour ne pas compter plusieurs fois la meme personne, un visiteur est identifie par une empreinte de l'adresse de la requete et du type de navigateur; cette empreinte est combinee a une cle qui change chaque jour, et le resultat est efface au bout de deux jours. Tant qu'un onglet reste ouvert, le navigateur envoie une requete courte toutes les 30 secondes, et cette empreinte est conservee en memoire du serveur pendant cinq minutes au maximum: rien de tout cela n'atteint le disque et un redemarrage l'efface simplement. L'adresse elle-meme n'est pas conservee, aucun cookie n'est utilise et les compteurs ne permettent pas d'identifier une personne en particulier. Nous utilisons ces totaux uniquement pour savoir si le site est utile.",
+          p: "Les pages indiquent combien de visiteurs le site a comptés au total, combien de conversions ont été réalisées et combien de personnes sont sur le site à cet instant. Il s'agit uniquement de chiffres agrégés. Pour ne pas compter plusieurs fois la même personne, un visiteur est identifié par une empreinte de l'adresse de la requête et du type de navigateur ; cette empreinte est combinée à une clé qui change chaque jour, et le résultat est effacé au bout de deux jours. Tant qu'un onglet reste ouvert, le navigateur envoie une requête courte toutes les 30 secondes, et cette empreinte est conservée en mémoire du serveur pendant cinq minutes au maximum : rien de tout cela n'atteint le disque et un redémarrage l'efface simplement. L'adresse elle-même n'est pas conservée, aucun cookie n'est utilisé et les compteurs ne permettent pas d'identifier une personne en particulier. Nous utilisons ces totaux uniquement pour savoir si le site est utile.",
         },
         {
           h: "Publicité",

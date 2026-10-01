@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { ChevronIcon } from "@/components/icons";
 import { getDictionary, isLocale, type Dictionary, type Locale } from "@/lib/i18n";
+import { site } from "@/lib/site";
 
 const PAGES = ["about", "privacy", "terms", "contact"] as const;
 export type LegalSlug = (typeof PAGES)[number];
@@ -50,6 +51,17 @@ export async function LegalPage({
             </section>
           ))}
         </div>
+
+        {slug === "contact" ? (
+          <p className="mt-8 text-[15px] font-medium">
+            <a
+              className="font-semibold text-brand underline decoration-brand/40 underline-offset-4 hover:decoration-brand"
+              href={`mailto:${site.contactEmail}`}
+            >
+              {site.contactEmail}
+            </a>
+          </p>
+        ) : null}
 
         <div className="mt-10 flex flex-wrap gap-3">
           {PAGES.filter((item) => item !== slug).map((item) => (

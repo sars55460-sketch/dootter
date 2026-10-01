@@ -238,6 +238,50 @@ const bundle = chunks.map((chunk) => chunk.body).join("\n");
 log(bundle.includes("/ping"), "the shipped bundle pings the counter service");
 log(bundle.includes("stats-online"), "the shipped bundle renders the live row");
 
+console.log("\n== RSYA compliance");
+// Rules 2.1.4 and 3.10.2c of the participation rules forbid clipping, filtering
+// or otherwise altering how a Yandex creative is displayed. An `overflow-hidden`
+// ancestor on the slot container silently truncates any creative taller than the
+// reserved height, which is exactly what those clauses prohibit, and nothing else
+// in this suite would notice.
+const adPages = pages.filter((page) => page.html.includes("yandex_rtb_R-A-20151624-1"));
+const clippedAds = adPages
+  .filter((page) => {
+    const slotAt = page.html.indexOf('id="yandex_rtb_R-A-20151624-1"');
+    return /overflow-hidden|clip-path|\bh-\[[0-9]+px\]/.test(page.html.slice(Math.max(0, slotAt - 400), slotAt));
+  })
+  .map((page) => page.path);
+log(
+  adPages.length > 0 && clippedAds.length === 0,
+  "no ad slot is clipped or height-capped",
+  clippedAds.slice(0, 4).join(", ") || `${adPages.length} pages`);
+
+// Rule 2.1.5 permits marking a placement as advertising, and the label has to be
+// visible text: an aria-label alone satisfies nobody, least of all a moderator
+// checking that the placement is marked. Scripts are stripped first, otherwise
+// the check passes on the serialized dictionary in the RSC payload and proves
+// nothing about what a reader sees.
+const visibleText = (html: string) => html.replace(/<script[\s\S]*?<\/script>/g, " ");
+const unmarkedAds = adPages
+  .filter((page) => !/>[^<]*(Advertisement|Реклама|Anzeige|Publicidad|Publicité)[^<]*</.test(visibleText(page.html)))
+  .map((page) => page.path);
+log(
+  adPages.length > 0 && unmarkedAds.length === 0,
+  "every ad slot carries a visible advertising label",
+  unmarkedAds.slice(0, 4).join(", ") || `${adPages.length} pages`);
+
+// Rule 1.1.g rejects resources with misleading content. The contact page asks
+// readers to report bugs, so an address has to be reachable from the page itself
+// rather than only from security.txt.
+const contactPages = pages.filter((page) => /\/contact\/$/.test(page.path));
+const noAddress = contactPages
+  .filter((page) => !/mailto:[^\s"'<>]+@/.test(page.html))
+  .map((page) => page.path);
+log(
+  contactPages.length === LOCALES.length && noAddress.length === 0,
+  "the contact page shows a working email address",
+  noAddress.slice(0, 4).join(", ") || `${contactPages.length} pages`);
+
 console.log("\n== internal links");
 const linkTargets = new Set<string>();
 for (const page of pages) {

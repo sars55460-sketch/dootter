@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { converters } from "@/lib/converters/registry";
 import type { Dictionary, Locale } from "@/lib/i18n";
+import { site } from "@/lib/site";
 import { SwapIcon } from "./icons";
 
 export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
@@ -63,6 +64,14 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
                   </Link>
                 </li>
               ))}
+              <li>
+                <a
+                  className="text-sm text-fg-muted transition-colors hover:text-brand"
+                  href={`mailto:${site.contactEmail}`}
+                >
+                  {site.contactEmail}
+                </a>
+              </li>
             </ul>
           </div>
         </div>

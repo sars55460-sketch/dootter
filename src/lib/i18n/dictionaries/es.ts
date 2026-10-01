@@ -218,7 +218,7 @@ export const es: Dictionary = {
       faqTitle: "Preguntas sobre Word a PDF",
       faq: [
         {
-          q: "¿Por que aquí el texto se puede seleccionar y en otros sitios no?",
+          q: "¿Por qué aquí el texto se puede seleccionar y en otros sitios no?",
           a: "Otros conversores imprimen tu documento como imagen y envuelven esa imagen en un PDF, por eso su resultado no se puede buscar ni copiar. Nosotros construimos el texto como texto, de modo que el PDF pesa menos, se ve nítido al ampliar y lo usan bien los lectores de pantalla.",
         },
         {
@@ -295,7 +295,7 @@ export const es: Dictionary = {
         "xlsx a docx",
         "excel a word tabla",
         "convertir excel a word online",
-        "hoja de calculo a word",
+        "hoja de cálculo a word",
         "excel a docx con encabezado repetido",
       ],
     },
@@ -352,7 +352,7 @@ export const es: Dictionary = {
         "tabla de word a excel",
         "convertir word a excel online",
         "word a excel con tablas",
-        "convertir tabla word a hoja de calculo",
+        "convertir tabla word a hoja de cálculo",
       ],
     },
   },
