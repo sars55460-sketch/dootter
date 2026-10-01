@@ -14,6 +14,11 @@
 *.txt text
 *.svg text
 
+# Shell scripts must keep LF in the repository. A CRLF shebang makes the
+# kernel refuse the interpreter and `bash deploy-vps.sh` has to be used
+# instead of ./deploy-vps.sh.
+*.sh text eol=lf
+
 # Binary assets must never be touched.
 *.ttf binary
 *.woff binary
