@@ -1,0 +1,46 @@
+# Cloudflare Pages reads this file and applies every matching rule to the
+# response. Later rules override earlier ones.
+#
+# With output: "export", Next.js cannot send headers itself, so this file is the
+# only place the security headers can live.
+
+# Everything, including the trailing-slash directory URLs the site is built
+# around, is treated as an HTML document and is revalidated on every visit.
+# Documents are rewritten on each deploy, so caching them would serve stale
+# markup to search engines and to users.
+#
+# The converter is a document tool, not a document host: it must never be framed
+# by someone else's page, must not sniff content types, and must not leak the
+# referrer of a page that has just handled a private file.
+#
+# 'unsafe-inline' is required for scripts and styles: a static export ships its
+# hydration payload as inline <script>/<style> blocks, and the Word renderer
+# writes inline styles onto the pages it lays out. Everything else is pinned to
+# 'self' and the site loads no third-party code at all. blob: is needed for the
+# pdf.js worker, the object URLs behind the download buttons, and html2canvas.
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), browsing-topics=()
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+  X-DNS-Prefetch-Control: off
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'; upgrade-insecure-requests
+
+# Static JS and CSS. Immutable is safe because Next.js fingerprints every file
+# under _next/static, so a changed file always gets a new name.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Embedded Roboto faces, used by the Word renderer for body text.
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# pdf.js worker. Kept cross-origin because the library resolves the worker
+# against its own origin rather than the page's.
+/pdf.worker.min.mjs
+  Cache-Control: public, max-age=86400
+  Access-Control-Allow-Origin: *

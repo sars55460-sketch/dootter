@@ -1,0 +1,51 @@
+{
+  "name": "dootter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dootter — a private document converter that runs entirely in the browser.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "samples": "node scripts/make-samples.mjs",
+    "test:convert": "node scripts/make-samples.mjs && tsx scripts/roundtrip.mts",
+    "test:browser": "node scripts/make-samples.mjs && tsx scripts/browser-test.mts",
+    "test:ui": "node scripts/make-samples.mjs && tsx scripts/verify-ui.mts",
+    "test:fidelity": "node scripts/make-samples.mjs && tsx scripts/verify-word-to-pdf.mts",
+    "test:static": "tsx scripts/verify-static.mts",
+    "serve:out": "tsx scripts/serve-out.mts",
+    "test": "npm run typecheck && npm run test:convert && npm run test:browser && npm run test:fidelity && npm run test:static && npm run test:ui"
+  },
+  "dependencies": {
+    "docx": "^9.5.1",
+    "docx-preview": "^0.4.1",
+    "fflate": "^0.8.2",
+    "html2canvas": "1.4.1",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
+    "mammoth": "^1.9.0",
+    "next": "^15.5.4",
+    "pdfjs-dist": "^4.10.38",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@expo-google-fonts/roboto": "^0.4.3",
+    "@tailwindcss/postcss": "^4.1.13",
+    "@types/node": "^24.5.2",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "linkedom": "^0.18.13",
+    "puppeteer": "^25.12.0",
+    "tailwindcss": "^4.1.13",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.2"
+  }
+}

@@ -1,0 +1,27 @@
+# Normalize line endings in the repository while keeping Windows checkouts native.
+# Without this, every file shows as modified on Windows after a checkout.
+* text=auto eol=lf
+
+*.ts text
+*.tsx text
+*.mts text
+*.mjs text
+*.json text
+*.js text
+*.css text
+*.md text
+*.html text
+*.txt text
+*.svg text
+
+# Binary assets must never be touched.
+*.ttf binary
+*.woff binary
+*.woff2 binary
+*.png binary
+*.jpg binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.docx binary
+*.xlsx binary

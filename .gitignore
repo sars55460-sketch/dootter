@@ -1,0 +1,24 @@
+# Dependencies and build artifacts
+node_modules
+.next
+out
+*.tsbuildinfo
+next-env.d.ts
+
+# Test scratch space
+tmp-samples
+tmp-out
+tmp-downloads
+
+# Logs
+*.log
+
+# Secrets. Only .env.example is committed.
+.env
+.env*.local
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+.vscode
+.idea

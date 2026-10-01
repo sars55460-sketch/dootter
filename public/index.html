@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href="/en/" />
+    <meta http-equiv="refresh" content="0; url=/en/" />
+    <title>Dootter</title>
+    <script>
+      var l = (navigator.language || "en").toLowerCase();
+      var map = { en: "en", ru: "ru", es: "es", de: "de", fr: "fr" };
+      var base = l.split("-")[0];
+      location.replace("/" + (map[base] || "en") + "/");
+    </script>
+  </head>
+  <body>
+    <p>Redirecting to <a href="/en/">/en/</a>…</p>
+  </body>
+</html>

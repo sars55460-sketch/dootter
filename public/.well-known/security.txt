@@ -1,0 +1,11 @@
+Contact: mailto:sars55460@gmail.com
+Expires: 2027-12-31T23:59:59.000Z
+Preferred-Languages: en, ru
+Canonical: https://example.com/.well-known/security.txt
+Policy: https://example.com/terms/
+
+# Contact abuse
+
+Report suspicious activity, malware distribution or abusive use of the converters.
+Please include the page URL and a short description. We cannot accept file
+attachments: conversion happens in your browser, so no file is ever uploaded here.
