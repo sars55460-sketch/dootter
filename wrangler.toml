@@ -1,0 +1,18 @@
+# Cloudflare Workers static assets configuration.
+#
+# The site is a pure static export: there is no Worker script, no server-side
+# code and no runtime. `main` is therefore deliberately absent, which tells
+# wrangler to upload only the files in the assets directory.
+#
+# The build command (npm run build) writes Next.js's export into out/, and this
+# is that directory. The value must be the build output, not the source folder.
+
+name = "dootter"
+compatibility_date = "2026-10-01"
+
+[assets]
+directory = "./out"
+
+# Serve /404.html for unknown paths instead of Wrangler's bare default page.
+# Next.js generates this file on export, so it stays in sync automatically.
+not_found_handling = "404-page"
