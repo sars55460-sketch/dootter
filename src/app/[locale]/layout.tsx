@@ -52,6 +52,12 @@ export async function generateMetadata({
     creator: dict.brand,
     publisher: dict.brand,
     formatDetection: { email: false, address: false, telephone: false },
+    // Kadam verifies the property by reading this tag out of the head. It goes
+    // in the root layout so every page carries it: the apex is a JS redirect, so
+    // a checker that does not run scripts would never see a token on "/".
+    other: {
+      "kadam-verification": site.verification.kadam,
+    },
     robots: {
       index: true,
       follow: true,

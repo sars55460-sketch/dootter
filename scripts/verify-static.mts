@@ -4,6 +4,8 @@
  * tags, JSON-LD validity, sitemap and robots contents, and every internal link
  * resolving without a 404.
  */
+import { site } from "../src/lib/site";
+
 const BASE = process.env.BASE_URL ?? "http://localhost:3000";
 const LOCALES = ["en", "ru", "es", "de", "fr"];
 const SLUGS = ["pdf-to-word", "word-to-pdf", "excel-to-word", "word-to-excel"];
@@ -47,6 +49,7 @@ for (const locale of LOCALES) {
 
 console.log(`\n== every page responds (${expected.length} paths)`);
 const pages: Page[] = [];
+let rootHtml = "";
 for (const path of expected) {
   if (path === "/") {
     // next dev shadows public/index.html and 404s; the static export serves it.
@@ -56,6 +59,10 @@ for (const path of expected) {
       "root answers (static redirect or dev 404)",
       `status ${response.status}`,
     );
+    // The apex is a JS redirect, so it is the one place a checker that does not
+    // execute scripts actually lands. Keep its markup in scope for the
+    // verification-tag check below.
+    if (response.status === 200) rootHtml = await response.text();
     continue;
   }
   const page = await fetchPage(path);
@@ -281,6 +288,37 @@ log(
   contactPages.length === LOCALES.length && noAddress.length === 0,
   "the contact page shows a working email address",
   noAddress.slice(0, 4).join(", ") || `${contactPages.length} pages`);
+
+// The site owner proves ownership of the domain to Kadam with this token. The
+// checker reads it out of the page head, and the apex is a JS redirect, so a
+// token on "/" alone would be invisible to anything that does not run scripts.
+// Every page has to carry it.
+const kadamToken = site.verification.kadam;
+const missingKadam = pages
+  .filter((page) => !page.html.includes(kadamToken))
+  .map((page) => page.path);
+log(
+  pages.length > 0 && missingKadam.length === 0,
+  "the kadam-verification meta tag is on every page",
+  missingKadam.slice(0, 4).join(", ") || `${pages.length} pages`);
+
+const kadamInHead = pages.filter((page) => {
+  const head = page.html.slice(0, page.html.indexOf("</head>") + 7);
+  return head.includes(kadamToken);
+});
+log(
+  kadamInHead.length === pages.length,
+  "the kadam-verification tag sits inside <head>",
+  `${kadamInHead.length} of ${pages.length} pages`);
+
+// Only meaningful on the static export; next dev 404s the apex.
+if (rootHtml) {
+  log(
+    rootHtml.includes(kadamToken),
+    "the kadam-verification meta tag is on the root redirect page",
+    rootHtml.includes(kadamToken) ? "found on /" : "missing from /",
+  );
+}
 
 console.log("\n== internal links");
 const linkTargets = new Set<string>();
