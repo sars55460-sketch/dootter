@@ -99,7 +99,7 @@ mkdir -p "$SNIPPET_DIR" "$CERTBOT_DIR"
 [ -f "${HERE}/security-headers.conf" ]  || die "missing security-headers.conf next to this script"
 [ -f "${HERE}/doootter.conf" ]          || die "missing doootter.conf next to this script"
 install -m 644 "${HERE}/security-headers.conf" "${SNIPPET_DIR}/doootter-security-headers.conf"
-install -m 644 "${HERE}/deploy/nginx/doootter.conf" "$SITE_CONF"
+install -m 644 "${HERE}/doootter.conf" "$SITE_CONF"
 rm -f "${CONF_DIR}/default.conf" /etc/nginx/sites-enabled/default
 mkdir -p /etc/nginx/sites-enabled
 
@@ -119,7 +119,7 @@ if [ "$ENABLE_TLS" -eq 1 ]; then
     certbot --nginx -d converter-doootter.ru -d www.converter-doootter.ru \
         --non-interactive --agree-tos --register-unsafely-without-email \
         --redirect || die "certbot failed: check that the domain already points at this server"
-    install -m 644 "${HERE}/deploy/nginx/doootter-ssl.conf" "$SSL_CONF"
+    install -m 644 "${HERE}/doootter-ssl.conf" "$SSL_CONF"
     nginx -t || die "SSL config is invalid"
     systemctl reload nginx
     log "HTTPS origin enabled"
