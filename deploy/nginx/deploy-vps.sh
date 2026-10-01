@@ -7,8 +7,12 @@
 #   bash deploy-vps.sh --src /tmp/dd/site --enable-tls
 #
 # --enable-tls runs certbot and installs the HTTPS origin block. Run it only
-# after the A record for converter-doootter.ru already points at this server
-# through Cloudflare: Let's Encrypt has to reach this host to validate.
+# after the A records for converter-dotter.ru and www.converter-dotter.ru already
+# point at this server: Let's Encrypt has to reach this host to validate.
+#
+# certbot uses the webroot plugin rather than --nginx so it never rewrites the
+# nginx configs shipped here; doootter.conf already serves the challenge from
+# $CERTBOT_DIR.
 #
 # Requires root or sudo. Safe to re-run: it always re-extracts the site and
 # leaves a rollback copy of the previous out/ behind.
@@ -116,9 +120,11 @@ if [ "$ENABLE_TLS" -eq 1 ]; then
     command -v certbot >/dev/null 2>&1 || {
         apt-get install -y -qq certbot python3-certbot-nginx
     }
-    certbot --nginx -d converter-doootter.ru -d www.converter-doootter.ru \
+    certbot certonly --webroot -w "$CERTBOT_DIR" \
+        -d converter-dotter.ru -d www.converter-dotter.ru \
         --non-interactive --agree-tos --register-unsafely-without-email \
-        --redirect || die "certbot failed: check that the domain already points at this server"
+        --keep-until-expiring \
+        || die "certbot failed: check that the domain already points at this server"
     install -m 644 "${HERE}/doootter-ssl.conf" "$SSL_CONF"
     nginx -t || die "SSL config is invalid"
     systemctl reload nginx
@@ -134,7 +140,8 @@ cat <<EOF
   curl -sI http://127.0.0.1/en/ | grep -i content-type # expect text/html
   curl -sI http://127.0.0.1/en/ | grep -i content-security-policy
 
-  After this works locally, check the same URLs through Cloudflare:
-  curl -I https://converter-doootter.ru/en/
+  Once HTTPS is enabled, check the public URLs:
+  curl -I https://converter-dotter.ru/en/
+  curl -I https://www.converter-dotter.ru/en/          # expect 301 to apex
 
 EOF
