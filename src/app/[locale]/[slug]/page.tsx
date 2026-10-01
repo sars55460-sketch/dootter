@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
+import { AdInterstitial } from "@/components/AdInterstitial";
 import { ConverterPanel } from "@/components/ConverterPanel";
 import { Faq } from "@/components/Faq";
 import { Footer } from "@/components/Footer";
@@ -185,6 +186,10 @@ export default async function ConverterPage({
       <div className="mt-20">
         <YandexAds label={dict.ads.label} />
       </div>
+
+      {/* Mounted last so the modal is already in the tree by the time the timer
+          fires, without delaying the converter's own render. */}
+      <AdInterstitial label={dict.ads.interstitialLabel} />
 
       <div className="mt-16 border-t border-line">
         <StatsCounter locale={locale} labels={dict.stats} />

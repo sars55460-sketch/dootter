@@ -414,6 +414,7 @@ export const es: Dictionary = {
   },
   ads: {
     label: "Publicidad",
+    interstitialLabel: "Publicidad",
   },
   stats: {
     visitors: "visitantes en total",

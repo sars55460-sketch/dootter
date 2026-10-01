@@ -414,6 +414,7 @@ export const ru: Dictionary = {
   },
   ads: {
     label: "Реклама",
+    interstitialLabel: "Реклама",
   },
   stats: {
     visitors: "посетителей всего",

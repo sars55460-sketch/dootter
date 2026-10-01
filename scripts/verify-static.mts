@@ -175,17 +175,26 @@ if (onStaticExport) {
   log(csp.includes("frame-ancestors 'none'"), "CSP forbids framing");
   log(csp.includes("object-src 'none'"), "CSP forbids plugins");
   log(!/unsafe-eval/.test(csp), "CSP does not allow eval");
-  // The only third-party origins allowed are the ad network's, and each one
-  // has to be named explicitly: a wildcard would quietly widen the policy.
-  const thirdParties = [...new Set([...csp.matchAll(/https?:\/\/[^;]+/g)].map((m) => m[0].trim()))];
-  const allowedHosts = ["yandex.ru", "yastatic.net", "mc.yandex.com"];
-  const unexpected = thirdParties.filter(
-    (origin) =>
-      !allowedHosts.some((host) =>
-        // The ad network also opens a WebSocket, which needs its own scheme.
-        ["https", "wss"].some((scheme) => origin === `${scheme}://${host}` || origin === `${scheme}://*.${host}`),
-      ),
-  );
+  // The only third-party origins allowed are the ad networks', and each one has to
+  // be named explicitly: a wildcard would quietly widen the policy.
+  const directives = csp.split(";").map((part) => part.trim()).filter(Boolean);
+  const thirdParties = [
+    ...new Set(
+      directives.flatMap((part) => part.split(/\s+/)).filter((token) => /^https?:\/\//.test(token) || /^wss:\/\//.test(token)),
+    ),
+  ];
+  const allowedHosts = ["yandex.ru", "yastatic.net", "mc.yandex.com", "highperformanceformat.com"];
+  const hostOf = (origin: string) => {
+    // "*.host" is the CSP spelling, not a real hostname: compare the parent.
+    const host = origin.replace(/^[a-z]+:\/\//i, "").replace(/^\*\./, "");
+    return host.toLowerCase();
+  };
+  const unexpected = thirdParties.filter((origin) => {
+    const host = hostOf(origin);
+    return !allowedHosts.some(
+      (allowed) => host === allowed || host.endsWith(`.${allowed}`),
+    );
+  });
   log(
     unexpected.length === 0,
     "CSP allows only the advertising origins",

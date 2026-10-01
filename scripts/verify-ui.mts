@@ -411,6 +411,56 @@ if (section("orientation switch (excel to word)")) {
 }
 
 // ----------------------------------------------------------------------- theme
+if (section("interstitial on a converter page")) {
+  await withBrowser(async (browser) => {
+    const { page } = await openPage(browser, "/en/pdf-to-word/");
+    const modal = () => page.$('[data-testid="interstitial"]');
+
+    // The ad zone is only served once the publisher key is set, so skip rather
+    // than assert behaviour of a feature that is deliberately dormant.
+    const enabled = await page.evaluate(
+      () => !!(window as unknown as Record<string, unknown>).__DOOOTTER_INTERSTITIAL__,
+    );
+    if (!enabled) {
+      console.log("   skip interstitial (no ad zone key configured)");
+      return;
+    }
+
+    await page.goto(`${BASE}/en/pdf-to-word/`, { waitUntil: "networkidle2" });
+    // The first load already consumed this session's one impression, so clear the
+    // flag before measuring the appearance/repeat behaviour.
+    await page.evaluate(() => window.sessionStorage.clear());
+    // domcontentloaded, not networkidle2: waiting for network idle takes longer
+    // than the interstitial delay itself, which would hide the very window this
+    // check is about - the converter being usable before any ad appears.
+    await page.goto(`${BASE}/en/pdf-to-word/`, { waitUntil: "domcontentloaded" });
+    await wait(250);
+    const ready = await page.evaluate(() => !!document.querySelector('[data-testid="dropzone"]'));
+    log(ready && (await modal()) === null, "the converter is usable before the ad appears");
+
+    await wait(2600);
+    log((await modal()) !== null, "the interstitial appears after a delay");
+
+    const labelled = await page.evaluate(
+      () => document.querySelector('[data-testid="interstitial"]')?.textContent?.trim() ?? "",
+    );
+    log(/advertisement/i.test(labelled), "the interstitial is labelled as advertising", labelled.slice(0, 20));
+
+    const converterIntact = await page.evaluate(
+      () => !!document.querySelector('[data-testid="dropzone"]'),
+    );
+    log(converterIntact, "the converter is still on screen behind the ad");
+
+    await page.click('[data-testid="interstitial-close"]');
+    await wait(400);
+    log((await modal()) === null, "the close button dismisses the ad");
+
+    await page.reload({ waitUntil: "networkidle2" });
+    await wait(2600);
+    log((await modal()) === null, "the interstitial does not repeat in the same session");
+  });
+}
+
 if (section("theme switching")) {
   await withBrowser(async (browser) => {
     const { page } = await openPage(browser, "/en/");

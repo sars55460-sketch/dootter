@@ -119,6 +119,7 @@ export type Dictionary = {
   };
   ads: {
     label: string;
+    interstitialLabel: string;
   };
   stats: {
     visitors: string;
