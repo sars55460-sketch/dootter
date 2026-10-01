@@ -46,6 +46,11 @@ MAX_BODY_BYTES = 4096
 REQUESTS_PER_MINUTE = 30
 SEEN_RETENTION_DAYS = 2
 
+# How long a browser counts as present after its last ping. Long enough to cover
+# a tab that is backgrounded or left untouched, short enough that the number
+# still means "now".
+LIVE_WINDOW_SECONDS = 300
+
 # Requests arrive through nginx, which is the only client that can reach us.
 # Anything without an Origin header is a direct call from the server itself
 # (health checks, tests) and is allowed; a browser always sends Origin on a
@@ -82,6 +87,10 @@ class State:
             "salt": "",
             "salt_date": "",
         }
+        # Presence, deliberately outside self.data so _save cannot reach it. A
+        # restart clears it, which is the truth: the service genuinely knows
+        # nothing about who is on the site until they ping again.
+        self.live: dict[str, float] = {}
         self._load()
 
     # -- persistence ------------------------------------------------------
@@ -209,10 +218,43 @@ class State:
 
     def public_totals(self) -> dict:
         with _lock:
+            # Pruned inline rather than through live_count(): that method takes
+            # the same non-reentrant lock, so calling it from here would
+            # deadlock instead of returning a count.
+            self._prune_live(datetime.now(timezone.utc).timestamp())
             return {
                 "visitors": self.data["visitors"],
                 "conversions": self.data["conversions"],
+                "live": len(self.live),
             }
+
+    # -- presence ----------------------------------------------------------
+
+    def _prune_live(self, now: float) -> None:
+        """Drop browsers whose last ping fell out of the window.
+
+        Expiry is checked when the set is used rather than by a timer: the
+        process then holds no wake-ups for data that is only worth reading when
+        someone asks. A site nobody visits prunes nothing, which is correct.
+        """
+        cutoff = now - LIVE_WINDOW_SECONDS
+        stale = [key for key, seen in self.live.items() if seen < cutoff]
+        for key in stale:
+            del self.live[key]
+
+    def touch_live(self, ip: str, user_agent: str) -> int:
+        """Record that a browser is on the site and return the live count."""
+        now = datetime.now(timezone.utc).timestamp()
+        with _lock:
+            self._prune_live(now)
+            self.live[self.visitor_hash(ip, user_agent)] = now
+            return len(self.live)
+
+    def live_count(self) -> int:
+        now = datetime.now(timezone.utc).timestamp()
+        with _lock:
+            self._prune_live(now)
+            return len(self.live)
 
     def seed(self, visitors: int, conversions: int) -> None:
         """Set the starting totals, used once from the existing access log."""
@@ -398,6 +440,14 @@ class StatsHandler(BaseHTTPRequestHandler):
                 body.pop("path", None)
             visitors = self.state.count_visit(self._client_ip(), self.headers.get("User-Agent", ""))
             self._send_json({"visitors": visitors})
+            return
+
+        if path == "/api/stats/ping":
+            # Presence only: deliberately no call to count_visit or
+            # count_conversion, because a ping repeats every 30 seconds and must
+            # not inflate the permanent counters.
+            self.state.touch_live(self._client_ip(), self.headers.get("User-Agent", ""))
+            self._send_json(self.state.public_totals())
             return
 
         if path == "/api/stats/conversion":

@@ -418,6 +418,13 @@ export const de: Dictionary = {
   stats: {
     visitors: "Besucher insgesamt",
     conversions: "Konvertierungen",
+    online: "gerade online",
+    onlineForms: {
+      one: "gerade online",
+      few: "gerade online",
+      many: "gerade online",
+      other: "gerade online",
+    },
   },
 
   pages: {
@@ -463,7 +470,7 @@ export const de: Dictionary = {
         },
         {
           h: "Besucher- und Konversionszähler",
-          p: "Auf den Seiten steht, wie viele Besucher die Website insgesamt hatte und wie viele Konvertierungen abgeschlossen wurden. Das sind ausschließlich zusammengefasste Zahlen. Um dieselbe Person nicht mehrfach zu zählen, wird ein Besucher über einen Hash aus Anfrageadresse und Browsertyp bestimmt; der Hash wird mit einem Schlüssel kombiniert, der täglich wechselt, und das Ergebnis wird nach zwei Tagen verworfen. Die Adresse selbst wird nicht gespeichert, es werden keine Cookies verwendet, und über die Zähler lässt sich keine einzelne Person ermitteln. Wir nutzen diese Summen ausschließlich, um zu erkennen, ob die Website nützlich ist.",
+          p: "Auf den Seiten steht, wie viele Besucher die Website insgesamt hatte, wie viele Konvertierungen abgeschlossen wurden und wie viele Personen gerade auf der Website sind. Das sind ausschließlich zusammengefasste Zahlen. Um dieselbe Person nicht mehrfach zu zählen, wird ein Besucher über einen Hash aus Anfrageadresse und Browsertyp bestimmt; der Hash wird mit einem Schlüssel kombiniert, der täglich wechselt, und das Ergebnis wird nach zwei Tagen verworfen. Solange ein Tab geöffnet ist, sendet der Browser alle 30 Sekunden eine kurze Anfrage; dieser Hash bleibt höchstens fünf Minuten im Arbeitsspeicher des Servers, gelangt nicht auf die Festplatte und wird bei einem Neustart einfach verworfen. Die Adresse selbst wird nicht gespeichert, es werden keine Cookies verwendet, und über die Zähler lässt sich keine einzelne Person ermitteln. Wir nutzen diese Summen ausschließlich, um zu erkennen, ob die Website nützlich ist.",
         },
         {
           h: "Werbung",

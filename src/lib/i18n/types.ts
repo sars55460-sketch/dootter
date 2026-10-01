@@ -129,6 +129,8 @@ export type Dictionary = {
     // all, and a locale that only needs "other" may repeat it.
     visitorsForms?: Record<"one" | "few" | "many" | "other", string>;
     conversionsForms?: Record<"one" | "few" | "many" | "other", string>;
+    online: string;
+    onlineForms?: Record<"one" | "few" | "many" | "other", string>;
   };
   pages: {
     about: LegalPage;

@@ -418,6 +418,13 @@ export const es: Dictionary = {
   stats: {
     visitors: "visitantes en total",
     conversions: "conversiones realizadas",
+    online: "en el sitio ahora",
+    onlineForms: {
+      one: "en el sitio ahora",
+      few: "en el sitio ahora",
+      many: "en el sitio ahora",
+      other: "en el sitio ahora",
+    },
   },
 
   pages: {
@@ -463,7 +470,7 @@ export const es: Dictionary = {
         },
         {
           h: "Contadores de visitas y conversiones",
-          p: "Las páginas muestran cuántos visitantes ha tenido el sitio en total y cuántas conversiones se han completado. Son solo cifras agregadas. Para no contar varias veces a la misma persona, un visitante se identifica mediante un hash de la dirección de la solicitud y del tipo de navegador; ese hash se combina con una clave que cambia cada día y el resultado se descarta a los dos días. La dirección en sí no se guarda, no se usan cookies y los contadores no permiten identificar a ninguna persona concreta. Usamos estos totales únicamente para saber si el sitio resulta útil.",
+          p: "Las páginas muestran cuántos visitantes ha tenido el sitio en total, cuántas conversiones se han completado y cuántas personas están en el sitio ahora mismo. Son solo cifras agregadas. Para no contar varias veces a la misma persona, un visitante se identifica mediante un hash de la dirección de la solicitud y del tipo de navegador; ese hash se combina con una clave que cambia cada día y el resultado se descarta a los dos días. Mientras una pestaña está abierta, el navegador envía una petición breve cada 30 segundos, y ese hash se conserva en la memoria del servidor como máximo cinco minutos: nada de eso llega al disco y un reinicio simplemente lo borra. La dirección en sí no se guarda, no se usan cookies y los contadores no permiten identificar a ninguna persona concreta. Usamos estos totales únicamente para saber si el sitio resulta útil.",
         },
         {
           h: "Publicidad",

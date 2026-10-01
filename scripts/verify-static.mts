@@ -219,6 +219,25 @@ log(
   "the counter is present on the home and converter pages",
   missingCounter.slice(0, 4).join(", ") || `${counterPages.length} pages`);
 
+// The numbers arrive only after hydration, so the live row cannot be checked in
+// the HTML. What can be checked there is that the shipped bundle contains the
+// client code for it: if the ping call or the row's test hook were dropped from
+// StatsCounter, every page would still build and every static check above would
+// still pass, and the feature would be silently gone in production.
+const chunks = await Promise.all(
+  [
+    ...new Set(
+      counterPages
+        .flatMap((page) => attr(page.html, /<script[^>]+src="([^"]+\.js)"/g))
+        .filter((src) => src.startsWith("/"))
+        .slice(0, 24),
+    ),
+  ].map(async (src) => ({ src, body: await (await fetch(`${BASE}${src}`)).text() })),
+);
+const bundle = chunks.map((chunk) => chunk.body).join("\n");
+log(bundle.includes("/ping"), "the shipped bundle pings the counter service");
+log(bundle.includes("stats-online"), "the shipped bundle renders the live row");
+
 console.log("\n== internal links");
 const linkTargets = new Set<string>();
 for (const page of pages) {

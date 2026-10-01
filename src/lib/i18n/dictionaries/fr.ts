@@ -418,6 +418,13 @@ export const fr: Dictionary = {
   stats: {
     visitors: "visiteurs au total",
     conversions: "conversions effectuees",
+    online: "sur le site actuellement",
+    onlineForms: {
+      one: "sur le site actuellement",
+      few: "sur le site actuellement",
+      many: "sur le site actuellement",
+      other: "sur le site actuellement",
+    },
   },
 
   pages: {
@@ -463,7 +470,7 @@ export const fr: Dictionary = {
         },
         {
           h: "Compteurs de visites et de conversions",
-          p: "Les pages indiquent combien de visiteurs le site a comptes au total et combien de conversions ont ete realisees. Il s'agit uniquement de chiffres agreges. Pour ne pas compter plusieurs fois la meme personne, un visiteur est identifie par une empreinte de l'adresse de la requete et du type de navigateur; cette empreinte est combinee a une cle qui change chaque jour, et le resultat est efface au bout de deux jours. L'adresse elle-meme n'est pas conservee, aucun cookie n'est utilise et les compteurs ne permettent pas d'identifier une personne en particulier. Nous utilisons ces totaux uniquement pour savoir si le site est utile.",
+          p: "Les pages indiquent combien de visiteurs le site a comptes au total, combien de conversions ont ete realisees et combien de personnes sont sur le site a cet instant. Il s'agit uniquement de chiffres agreges. Pour ne pas compter plusieurs fois la meme personne, un visiteur est identifie par une empreinte de l'adresse de la requete et du type de navigateur; cette empreinte est combinee a une cle qui change chaque jour, et le resultat est efface au bout de deux jours. Tant qu'un onglet reste ouvert, le navigateur envoie une requete courte toutes les 30 secondes, et cette empreinte est conservee en memoire du serveur pendant cinq minutes au maximum: rien de tout cela n'atteint le disque et un redemarrage l'efface simplement. L'adresse elle-meme n'est pas conservee, aucun cookie n'est utilise et les compteurs ne permettent pas d'identifier une personne en particulier. Nous utilisons ces totaux uniquement pour savoir si le site est utile.",
         },
         {
           h: "Publicité",

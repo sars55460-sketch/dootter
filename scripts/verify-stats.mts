@@ -73,9 +73,9 @@ async function stopService(): Promise<void> {
   child = null;
 }
 
-async function totals(): Promise<{ visitors: number; conversions: number }> {
+async function totals(): Promise<{ visitors: number; conversions: number; live: number }> {
   const response = await fetch(`${BASE}/api/stats`);
-  return (await response.json()) as { visitors: number; conversions: number };
+  return (await response.json()) as { visitors: number; conversions: number; live: number };
 }
 
 async function post(path: string, body: unknown, headers: Record<string, string> = {}) {
@@ -131,6 +131,73 @@ try {
     "each tool is counted separately",
     JSON.stringify(tools),
   );
+
+  console.log("\n== live presence");
+
+  // A ping repeats every 30 seconds per open tab, so the failure this guards
+  // against is a ping also counting as a visit. That would inflate the
+  // permanent daily total by a factor of about 170.
+  const beforePing = await totals();
+  await post("/api/stats/ping", {}, { "User-Agent": "live-browser-A" });
+  const afterPing = await totals();
+  log(
+    afterPing.visitors === beforePing.visitors && afterPing.conversions === beforePing.conversions,
+    "a ping does not change the permanent counters",
+    `${JSON.stringify(beforePing)} -> ${JSON.stringify(afterPing)}`,
+  );
+
+  log(afterPing.live === 1, "a ping counts the visitor as present", `live=${afterPing.live}`);
+
+  // Same browser, second ping: presence is a set keyed by visitor hash, so
+  // repeating must not inflate it.
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    await post("/api/stats/ping", {}, { "User-Agent": "live-browser-A" });
+  }
+  const afterRepeatPing = await totals();
+  log(afterRepeatPing.live === 1, "repeating a ping does not double-count", `live=${afterRepeatPing.live}`);
+
+  await post("/api/stats/ping", {}, { "User-Agent": "live-browser-B" });
+  const afterSecondBrowser = await totals();
+  log(
+    afterSecondBrowser.live === 2,
+    "a second browser is counted separately",
+    `live=${afterSecondBrowser.live}`,
+  );
+
+  // The count travels to the public GET, not only in the ping's own reply.
+  const readLive = await totals();
+  log(readLive.live === 2, "the public totals carry the live count", `live=${readLive.live}`);
+
+  // The most important assertion here. Presence is in memory precisely so it
+  // does not cost an fsync per ping per visitor, and because it is worthless
+  // five minutes later. If a later edit adds it to the serialised state, that
+  // test fails here instead of quietly turning a restart into a stale number.
+  const stateAfterPings = readState();
+  log(
+    !("live" in stateAfterPings),
+    "presence is never written to the state file",
+    Object.keys(stateAfterPings).join(","),
+  );
+
+  // Expiry is checked by restarting, which is the event the in-memory design
+  // actually has to survive: after it, the service genuinely does not know who
+  // is on the site until they ping again.
+  await stopService();
+  await startService(40);
+  const afterRestart = await totals();
+  log(afterRestart.live === 0, "a restart clears presence rather than freezing it", `live=${afterRestart.live}`);
+  log(
+    afterRestart.visitors === afterSecondBrowser.visitors,
+    "clearing presence leaves the permanent counters alone",
+    `visitors=${afterRestart.visitors}`,
+  );
+
+  const crossSitePing = await post("/api/stats/ping", {}, { Origin: "https://evil.example" });
+  log(crossSitePing.status === 403, "a cross-site ping is refused", `status=${crossSitePing.status}`);
+
+  await post("/api/stats/ping", {}, { "User-Agent": "live-browser-A" });
+  const afterReturnPing = await totals();
+  log(afterReturnPing.live === 1, "presence comes back on the next ping", `live=${afterReturnPing.live}`);
 
   console.log("\n== abuse resistance");
   // A cross-site request with no Origin header: the browser cannot forge

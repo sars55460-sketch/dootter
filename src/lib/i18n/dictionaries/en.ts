@@ -418,6 +418,13 @@ export const en: Dictionary = {
   stats: {
     visitors: "visitors so far",
     conversions: "conversions done",
+    online: "here right now",
+    onlineForms: {
+      one: "here right now",
+      few: "here right now",
+      many: "here right now",
+      other: "here right now",
+    },
   },
 
   pages: {
@@ -463,7 +470,7 @@ export const en: Dictionary = {
         },
         {
           h: "Visit and conversion counters",
-          p: "The pages show how many visitors the site has had in total and how many conversions have been completed. The numbers are aggregate only. To avoid counting the same person repeatedly, a visitor is identified by a hash of the request address and browser type, the hash is combined with a key that changes every day, and the result is discarded after two days. Your address itself is never stored, no cookie is used, and the counters cannot be traced back to you. We use these totals to understand whether the site is useful, and for nothing else.",
+          p: "The pages show how many visitors the site has had in total, how many conversions have been completed, and how many people are on the site right now. The numbers are aggregate only. To avoid counting the same person repeatedly, a visitor is identified by a hash of the request address and browser type, the hash is combined with a key that changes every day, and the result is discarded after two days. While a tab is open the browser sends a short request every 30 seconds, and that hash is kept in server memory for no more than five minutes; none of it reaches disk, and a restart simply clears it. Your address itself is never stored, no cookie is used, and the counters cannot be traced back to you. We use these totals to understand whether the site is useful, and for nothing else.",
         },
         {
           h: "Advertising",

@@ -48,7 +48,7 @@ createServer((request, response) => {
         "content-type": "application/json; charset=utf-8",
         "cache-control": "no-store",
       });
-      response.end(JSON.stringify({ visitors: 0, conversions: 0 }));
+      response.end(JSON.stringify({ visitors: 0, conversions: 0, live: 0 }));
       return;
     }
     const proxied = httpRequest(
