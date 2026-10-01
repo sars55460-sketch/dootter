@@ -1,8 +1,8 @@
 Contact: mailto:sars55460@gmail.com
 Expires: 2027-12-31T23:59:59.000Z
 Preferred-Languages: en, ru
-Canonical: https://example.com/.well-known/security.txt
-Policy: https://example.com/terms/
+Canonical: https://converter-doootter.ru/.well-known/security.txt
+Policy: https://converter-doootter.ru/terms/
 
 # Contact abuse
 

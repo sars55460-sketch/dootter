@@ -42,21 +42,46 @@ npx wrangler pages deploy out --project-name dootter
 
 ## 3. Домен
 
-Аккаунт Cloudflare уже есть, но NS домена ещё не перенесены. Порядок:
+Домен: `converter-doootter.ru`, основной адрес — без `www`.
 
-1. **Add a site** → ввести домен (без `https://`, без `www`).
+NS домена ещё не перенесены. Порядок:
+
+1. **Add a site** → ввести `converter-doootter.ru`.
 2. Cloudflare покажет два NS-сервера вида
    `alice.ns.cloudflare.com` и `bob.ns.cloudflare.com`.
-3. У регистратора домена заменить текущие NS на эти два.
+3. У регистратора (у Per.py) заменить текущие NS на эти два.
 4. Дождаться статуса **Active** (обычно от нескольких минут до 24 часов).
-5. В **Pages** → проект → **Custom domains** → добавить основной домен и `www`.
+5. В **Pages** → проект `dootter` → **Custom domains** → добавить
+   `converter-doootter.ru`. Запись `www` добавлять не нужно: без неё
+   Cloudflare не сможет отдать редирект, шаг 6 это закрывает.
 
 Про SSL: сертификат Cloudflare выдаётся автоматически, отдельных действий не
 требуется.
 
-Принудительные `www → apex` и `http → https` задаются в самом Cloudflare
-(Settings → Redirect Rules), потому что имя проекта Pages в `_redirects`
-подставляется только на стороне платформы.
+### www → apex
+
+Доменные редиректы в файле `_redirects` не поддерживаются (Cloudflare
+документирует их как неподдерживаемые), поэтому редирект настраивается в
+панели через **Bulk Redirects**:
+
+1. Создать DNS-запись: тип **A**, имя `www`, адрес `192.0.2.1`, проксирование
+   **Proxied** (включено). Это специальный адрес-заглушка Cloudflare, запрос
+   до Pages не дойдёт.
+2. **Rules → Bulk Redirects** → создать список:
+   | Source URL | Target URL | Status | Parameters |
+   |---|---|---|---|
+   | `www.converter-doootter.ru` | `https://converter-doootter.ru` | 301 | Preserve query string, Subpath matching, Preserve path suffix |
+3. Создать правило по этому списку.
+4. Проверить: `curl --head -i https://www.converter-doootter.ru/` — должен
+   вернуться `301` с `location` на apex.
+
+Почему apex, а не `www`: canonical-ссылки, sitemap и `security.txt`
+сгенерированы на `https://converter-doootter.ru` из `src/lib/site.ts`. Если
+основным сделать `www`, придётся менять конфиг и всю разметку, а репутация
+нового домена у поисковиков лучше на одном адресе без редиректов.
+
+Переадресация `*.pages.dev` → домен делается там же, через Bulk Redirects,
+чтобы сайт не открывался по двум адресам.
 
 ## 4. Что уже настроено в коде
 
