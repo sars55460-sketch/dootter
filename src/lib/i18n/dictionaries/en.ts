@@ -8,6 +8,18 @@ export const en: Dictionary = {
   meta: {
     converterTitle: "{title} — free, no upload, no watermark | {brand}",
     legalTitle: "{title} | {brand}",
+    homeKeywords: [
+      "converter",
+      "pdf converter",
+      "pdf to word",
+      "word to pdf",
+      "excel to word",
+      "word to excel",
+      "online document converter",
+      "free converter",
+      "convert pdf to word",
+      "no upload converter",
+    ],
   },
 
   nav: {
@@ -432,7 +444,7 @@ export const en: Dictionary = {
     about: {
       title: "About Dootter",
       intro:
-        "Dootter is a document converter that does one thing and refuses to do anything sketchy with your files.",
+        "Dootter is a startup for working with documents. Today it is a converter for PDF, Word and Excel that never hands your files to a stranger. Tomorrow it is more than conversion.",
       sections: [
         {
           h: "Why we built it",
@@ -449,6 +461,10 @@ export const en: Dictionary = {
         {
           h: "Who it is for",
           p: "Students formatting a thesis, accountants moving a ledger into Word, freelancers sending a client a PDF instead of a spreadsheet, and anyone who has ever needed a document converted before lunch. If the task is move a file from A to B without handing it to a stranger, this site is for you.",
+        },
+        {
+          h: "Dootter is growing",
+          p: "Conversion is the starting point, not the whole product. We are building a place to work with documents, and the toolset keeps expanding: editing and fixing documents right in the browser, working with images and scans, optical character recognition, checking and cleaning up files, merging and splitting pages, signing and exporting. What started it all stays the same: everything runs on your device, files never go to a server, there is no sign-up, and the basic tools stay free.",
         },
       ],
     },

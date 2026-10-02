@@ -8,9 +8,15 @@
  */
 export const site = {
   name: "Dootter",
-  tagline: "Free private document converter",
+  tagline: "Document tools that run in your browser",
+  /**
+   * Not "converter" and nothing more: Dootter starts as a document converter
+   * and is being built outwards. Wording it as a finished single-purpose tool
+   * hides the parts of the product that are still coming, so the description
+   * names both the current tools and the direction.
+   */
   description:
-    "Free online converter for PDF, Word and Excel files. PDF to Word, Word to PDF, Excel to Word, Word to Excel. Files are processed in your browser and never uploaded.",
+    "Dootter is a growing startup for working with documents in the browser: PDF to Word, Word to PDF, Excel to Word and Word to Excel today, with more document tools on the way. Files are processed on your device and never uploaded.",
   url: "https://converter-dotter.ru",
   /**
    * Public contact address. The contact page invites readers to report bugs, so

@@ -105,6 +105,10 @@ export function appJsonLd(params: {
       "Runs locally in the browser",
       "No upload of files",
       "No watermark",
+      "Document editing and cleanup (in development)",
+      "Image and scan tools (in development)",
+      "OCR for scanned documents (in development)",
+      "Merge, split and sign pages (in development)",
     ],
   };
 }

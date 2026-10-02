@@ -8,6 +8,17 @@ export const de: Dictionary = {
   meta: {
     converterTitle: "{title} — kostenlos, ohne Upload, ohne Wasserzeichen | {brand}",
     legalTitle: "{title} | {brand}",
+    homeKeywords: [
+      "konverter",
+      "pdf konverter",
+      "pdf in word",
+      "word in pdf",
+      "excel in word",
+      "word in excel",
+      "online dokumentenkonverter",
+      "kostenloser konverter",
+      "pdf in word umwandeln",
+    ],
   },
 
   nav: {
@@ -432,7 +443,7 @@ export const de: Dictionary = {
     about: {
       title: "Über Dootter",
       intro:
-        "Dootter ist ein Dokumentenkonverter, der genau eine Sache tut und sich weigert, etwas Fragwürdiges mit Ihren Dateien anzustellen.",
+        "Dootter ist ein Startup für die Arbeit mit Dokumenten. Heute ist es ein Konverter für PDF, Word und Excel, der Ihre Dateien nie an Fremde übergibt. Morgen ist es mehr als Konvertierung.",
       sections: [
         {
           h: "Warum wir das gebaut haben",
@@ -449,6 +460,10 @@ export const de: Dictionary = {
         {
           h: "Für wen das gedacht ist",
           p: "Studierende, die eine Abschlussarbeit formatieren, Buchhalter, die eine Tabelle nach Word übernehmen, Freiberufler, die einem Kunden ein PDF statt einer Tabelle schicken, und jeder, der schon einmal ein Dokument vor dem Mittagessen umwandeln musste. Wenn die Aufgabe lautet, eine Datei von A nach B zu bringen, ohne sie einem Fremden zu geben, ist diese Seite für Sie.",
+        },
+        {
+          h: "Dootter wächst",
+          p: "Konvertierung ist der Ausgangspunkt, nicht das ganze Produkt. Wir bauen einen Ort für die Arbeit mit Dokumenten, und der Werkzeugkasten wächst weiter: Dokumente direkt im Browser bearbeiten und korrigieren, mit Bildern und Scans arbeiten, Texterkennung, Dateien prüfen und aufräumen, Seiten zusammenführen und trennen, signieren und exportieren. Was den Anfang gemacht hat, bleibt: Alles läuft auf Ihrem Gerät, Dateien gehen nie auf einen Server, eine Anmeldung ist nicht nötig, und die Grundwerkzeuge bleiben kostenlos.",
         },
       ],
     },

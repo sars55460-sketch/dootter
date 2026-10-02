@@ -46,6 +46,7 @@ export async function generateMetadata({
       title: `${dict.hero.title} | ${dict.brand}`,
       description: dict.hero.subtitle,
       path: "",
+      keywords: dict.meta.homeKeywords,
     }),
     applicationName: dict.brand,
     authors: [{ name: dict.brand }],

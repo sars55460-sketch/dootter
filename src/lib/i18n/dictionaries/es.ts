@@ -8,6 +8,17 @@ export const es: Dictionary = {
   meta: {
     converterTitle: "{title}: gratis, sin subir archivos y sin marca de agua | {brand}",
     legalTitle: "{title} | {brand}",
+    homeKeywords: [
+      "conversor",
+      "conversor de pdf",
+      "pdf a word",
+      "word a pdf",
+      "excel a word",
+      "word a excel",
+      "conversor de documentos online",
+      "conversor gratis",
+      "convertir pdf a word",
+    ],
   },
 
   nav: {
@@ -432,7 +443,7 @@ export const es: Dictionary = {
     about: {
       title: "Sobre Dootter",
       intro:
-        "Dootter es un conversor de documentos que hace una sola cosa y se niega a hacer algo dudoso con tus archivos.",
+        "Dootter es una startup para trabajar con documentos. Hoy es un conversor de PDF, Word y Excel que nunca entrega tus archivos a un desconocido. Mañana es más que conversión.",
       sections: [
         {
           h: "Por qué lo creamos",
@@ -449,6 +460,10 @@ export const es: Dictionary = {
         {
           h: "Para quién es",
           p: "Estudiantes maquetando un trabajo de fin de carrera, contables que llevan una tabla a Word, autónomos que envían un PDF en lugar de una hoja de cálculo, y cualquiera que alguna vez haya necesitado convertir un documento antes de comer. Si la tarea es pasar un archivo de A a B sin entregárselo a un desconocido, este sitio es para ti.",
+        },
+        {
+          h: "Dootter está creciendo",
+          p: "La conversión es el punto de partida, no todo el producto. Estamos construyendo un lugar para trabajar con documentos, y el conjunto de herramientas sigue creciendo: editar y corregir documentos directamente en el navegador, trabajar con imágenes y escaneos, reconocimiento óptico de caracteres, comprobar y limpiar archivos, unir y dividir páginas, firmar y exportar. Lo que lo empezó sigue igual: todo se ejecuta en tu dispositivo, los archivos nunca van a un servidor, no hace falta registro y las herramientas básicas siguen siendo gratuitas.",
         },
       ],
     },

@@ -8,6 +8,17 @@ export const fr: Dictionary = {
   meta: {
     converterTitle: "{title} — gratuit, sans envoi de fichier ni filigrane | {brand}",
     legalTitle: "{title} | {brand}",
+    homeKeywords: [
+      "convertisseur",
+      "convertisseur pdf",
+      "pdf en word",
+      "word en pdf",
+      "excel en word",
+      "word en excel",
+      "convertisseur de documents en ligne",
+      "convertisseur gratuit",
+      "convertir pdf en word",
+    ],
   },
 
   nav: {
@@ -432,7 +443,7 @@ export const fr: Dictionary = {
     about: {
       title: "À propos de Dootter",
       intro:
-        "Dootter est un convertisseur de documents qui fait une seule chose et refuse de faire quoi que ce soit de douteux avec vos fichiers.",
+        "Dootter est une startup consacrée aux documents. Aujourd'hui, c'est un convertisseur PDF, Word et Excel qui ne confie jamais vos fichiers à un inconnu. Demain, ce sera plus que de la conversion.",
       sections: [
         {
           h: "Pourquoi nous l'avons créé",
@@ -449,6 +460,10 @@ export const fr: Dictionary = {
         {
           h: "À qui cela s'adresse",
           p: "Aux étudiants qui mettent en page un mémoire, aux comptables qui passent un grand livre dans Word, aux freelances qui envoient un PDF au lieu d'un tableur, et à quiconque a déjà eu besoin de convertir un document avant le déjeuner. Si l'objectif est de faire passer un fichier de A à B sans le confier à un inconnu, ce site est pour vous.",
+        },
+        {
+          h: "Dootter grandit",
+          p: "La conversion est un point de départ, pas le produit entier. Nous construisons un endroit pour travailler avec des documents, et la boîte à outils continue de s'agrandir : éditer et corriger des documents directement dans le navigateur, travailler avec les images et les scans, reconnaissance optique de caractères, vérifier et nettoyer des fichiers, fusionner et séparer des pages, signer et exporter. Ce qui a tout lancé ne change pas : tout tourne sur votre appareil, les fichiers ne vont jamais sur un serveur, aucune inscription n'est requise et les outils de base restent gratuits.",
         },
       ],
     },

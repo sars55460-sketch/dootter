@@ -33,6 +33,11 @@ export type Dictionary = {
     /** `{title}` and `{brand}` are replaced at render time. */
     converterTitle: string;
     legalTitle: string;
+    /**
+     * Home page keywords. The home page had none, so it only ever ranked on its
+     * title text; these name the converter queries the four tools answer.
+     */
+    homeKeywords: string[];
   };
   nav: {
     home: string;
