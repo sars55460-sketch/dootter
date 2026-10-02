@@ -170,7 +170,93 @@ function makePdf() {
   doc.text("Вторая страница: текст после таблицы продолжает нумерацию абзацев.", 40, 60);
 
   writeFileSync(join(OUT, "sample.pdf"), Buffer.from(doc.output("arraybuffer")));
+  makeWrappedPdf();
   makeScannedPdf();
+}
+
+/**
+ * A PDF built from paragraphs that really wrap.
+ *
+ * sample.pdf is a list of one-line paragraphs, so it cannot tell a converter
+ * that merges lines into paragraphs from one that leaves the PDF's hard line
+ * breaks in place - the two produce the same text. This file wraps a long
+ * paragraph over several lines instead, which is the only way to check that the
+ * output re-wraps the way Word would.
+ */
+function makeWrappedPdf() {
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
+  const font = readFileSync(join(process.cwd(), "public/fonts/Roboto-Regular.ttf")).toString("base64");
+  const bold = readFileSync(join(process.cwd(), "public/fonts/Roboto-Bold.ttf")).toString("base64");
+  const italic = readFileSync(join(process.cwd(), "public/fonts/Roboto-Italic.ttf")).toString("base64");
+  doc.addFileToVFS("Roboto-Regular.ttf", font);
+  doc.addFont("Roboto-Regular.ttf", "Roboto", "normal");
+  doc.addFileToVFS("Roboto-Bold.ttf", bold);
+  doc.addFont("Roboto-Bold.ttf", "Roboto", "bold");
+  doc.addFileToVFS("Roboto-Italic.ttf", italic);
+  doc.addFont("Roboto-Italic.ttf", "Roboto", "italic");
+
+  const margin = 40;
+  const column = 515;
+  const justifyMarker = "JUSTIFIEDBLOCK";
+  const raggedMarker = "RAGGEDBLOCK";
+
+  doc.setFont("Roboto", "bold");
+  doc.setFontSize(16);
+  doc.text("Layout Fixture", margin, 60);
+
+  doc.setFont("Roboto", "italic");
+  doc.setFontSize(10);
+  doc.text("Italic caption line under the title.", margin, 82);
+
+  // One long justified paragraph. Every wrapped line but the last is flush with
+  // the right edge, which is what tells a converter the lines belong together.
+  doc.setFont("Roboto", "normal");
+  doc.setFontSize(11);
+  const justified = [
+    justifyMarker,
+    "This paragraph is long enough to wrap over several lines so that the converter has to",
+    "rejoin the pieces into a single paragraph instead of carrying the source line breaks",
+    "across into Word, where every line would become its own paragraph and the text would",
+    "never reflow the way it does in a real document.",
+  ].join(" ");
+  doc.text(justified, margin, 110, { maxWidth: column, align: "justify" });
+
+  // The same shape, left aligned: the lines end at ragged positions but are still
+  // one paragraph.
+  const ragged = [
+    raggedMarker,
+    "This second paragraph is also long enough to wrap, but it is aligned to the left so",
+    "that its lines end at uneven positions and only the first line sits at the column",
+    "edge. The lines still belong to one paragraph.",
+  ].join(" ");
+  doc.text(ragged, margin, 205, { maxWidth: column, align: "left" });
+
+  doc.setFont("Roboto", "bold");
+  doc.setFontSize(13);
+  doc.text("List section", margin, 290);
+
+  doc.setFont("Roboto", "normal");
+  doc.setFontSize(11);
+  let y = 312;
+  for (const item of [
+    "First bullet item that is long enough to wrap onto a second line in the source",
+    "Second bullet item which is shorter",
+    "Third bullet item, also reasonably short",
+  ]) {
+    doc.text(`• ${item}`, margin + 10, y, { maxWidth: column - 10 });
+    y += 20;
+  }
+
+  y += 20;
+  doc.text("1. First numbered item that is long enough to wrap onto another line", margin + 10, y, {
+    maxWidth: column - 10,
+  });
+  y += 20;
+  doc.text("2. Second numbered item which fits on one line", margin + 10, y, {
+    maxWidth: column - 10,
+  });
+
+  writeFileSync(join(OUT, "wrapped.pdf"), Buffer.from(doc.output("arraybuffer")));
 }
 
 /** A PDF that only contains an image: no text layer at all, like a scan. */

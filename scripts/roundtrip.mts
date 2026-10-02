@@ -78,6 +78,65 @@ async function testPdfToDocx() {
   check("rebuilds a real Word table", raw.includes("<w:tbl>"), `tables in xml: ${(raw.match(/<w:tbl>/g) || []).length}`);
   check("repeats header row on split tables", raw.includes("<w:tblHeader"), "no tblHeader found");
   check("no scanned warning", !result.warnings.some((w) => w.code === "scanned-pdf"));
+
+  // A page break per source page is what pushed content onto blank pages in
+  // Word: the section already breaks between pages on its own.
+  check("does not force one Word page per PDF page", !/<w:br w:type="page"/.test(raw));
+
+  // Defaulting to Letter reflowed A4 documents onto a narrower column.
+  check("keeps the A4 page size", /<w:pgSz\b[^>]*w:w="11906"/.test(raw), raw.match(/<w:pgSz[^>]*>/)?.[0] ?? "");
+  check("keeps the A4 page height", /<w:pgSz\b[^>]*w:h="16838"/.test(raw));
+
+  // 2 cm on every side was too wide for A4 and cost lines per page.
+  const pgMar = raw.match(/<w:pgMar[^>]*>/)?.[0] ?? "";
+  const twips = (name: string) => Number(pgMar.match(new RegExp(`w:${name}="(\\d+)"`))?.[1] ?? 0);
+  check(
+    "keeps the measured margins instead of 2 cm",
+    twips("left") > 0 && twips("left") <= 1134,
+    `left=${twips("left")} top=${twips("top")}`,
+  );
+  check("top and bottom margins match", twips("top") === twips("bottom"), `top=${twips("top")} bottom=${twips("bottom")}`);
+
+  // The title is set at 20pt in the PDF; without an explicit size Word falls
+  // back to 11pt and every heading collapses to body text.
+  check("keeps the title font size", /<w:sz w:val="40"\/>/.test(raw), "no 20pt (40 half-point) run found");
+}
+
+/**
+ * sample.pdf is made of one-line paragraphs, so it cannot tell a converter that
+ * rejoins wrapped lines from one that keeps the PDF's hard breaks. wrapped.pdf
+ * exists for exactly that: its long paragraphs wrap over several lines.
+ */
+async function testPdfToDocxWrappedParagraphs() {
+  const result = report(
+    "PDF -> Word (wrapped paragraphs)",
+    await pdfToDocx(sampleFile("wrapped.pdf", "application/pdf")),
+  );
+  const buffer = await save("pdf-to-word-wrapped", result);
+  const { raw, text } = await extractDocxXml(buffer);
+
+  check("keeps both long paragraphs", text.includes("JUSTIFIEDBLOCK") && text.includes("RAGGEDBLOCK"));
+
+  // Each wrapped paragraph must become one paragraph. Counting the block's
+  // paragraphs: headings, list items and table cells are excluded because they
+  // are legitimately short.
+  const bodyXml = raw.replace(/<w:tbl>[\s\S]*?<\/w:tbl>/g, "");
+  const bodyParas = [...bodyXml.matchAll(/<w:p[ >][\s\S]*?<\/w:p>/g)]
+    .map((m) => m[0])
+    .filter((p) => !/<w:numPr>/.test(p) && !/<w:pStyle w:val="(?:Heading|Title)/.test(p));
+  const longBodyParas = bodyParas.filter(
+    (p) => [...p.matchAll(/<w:t[^>]*>([\s\S]*?)<\/w:t>/g)].map((m) => m[1]).join("").trim().length > 70,
+  );
+  check(
+    "rejoins wrapped lines into single paragraphs",
+    longBodyParas.length === 2,
+    `expected 2 long body paragraphs, got ${longBodyParas.length} of ${bodyParas.length}`,
+  );
+
+  check("detects the justified paragraph", raw.includes('w:val="both"'));
+  check("keeps list items as a real Word list", (raw.match(/<w:numPr>/g) || []).length >= 5);
+  check("does not duplicate the bullet character", !text.includes("••") && !/•\s*•/.test(text));
+  check("keeps the numbered marker out of the text", !/^\s*\d\.\s+First numbered/m.test(text));
 }
 
 /**
@@ -310,6 +369,7 @@ const notices = {
 async function main() {
   await testMammothInputShape();
   await testPdfToDocx();
+  await testPdfToDocxWrappedParagraphs();
   await testDocxToPdfGuards();
   await testXlsxToDocx();
   await testDocxToXlsx();
